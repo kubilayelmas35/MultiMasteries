@@ -252,6 +252,58 @@ Deno.serve(async (req) => {
           dow,
         });
       }
+      case "studentweek": {
+        const studentId = await resolveStudentSession(supabase, String(body.sessionToken || ""));
+        const weekStart = body.weekStartIso
+          ? new Date(String(body.weekStartIso))
+          : new Date();
+        weekStart.setHours(0, 0, 0, 0);
+        const monday = startOfWeekMonday(weekStart);
+        const monStr = isoDate(monday);
+        const { data: plans } = await supabase
+          .from("weekly_plans")
+          .select("id, title, status, week_start")
+          .eq("student_id", studentId)
+          .eq("status", "published")
+          .eq("week_start", monStr)
+          .limit(1);
+        const plan = plans?.[0] || null;
+        if (!plan) return json({ plan: null, items: [], dow: toSchoolDayOfWeek(new Date()) });
+        const { data: items, error } = await supabase
+          .from("plan_items")
+          .select(
+            "id, day_of_week, slot_order, duration_minutes, topic_snapshot, topic_ids_snapshot, teacher_note, importance, has_test, subject_id, subjects ( id, title, color )",
+          )
+          .eq("weekly_plan_id", plan.id)
+          .order("day_of_week", { ascending: true })
+          .order("slot_order", { ascending: true });
+        if (error) throw error;
+        const mapped = (items || []).map((it: Record<string, unknown>) => {
+          const sub = it.subjects as { id: string; title: string; color: string } | null | undefined;
+          return {
+            _id: it.id,
+            dayOfWeek: it.day_of_week,
+            slotOrder: it.slot_order,
+            durationMinutes: it.duration_minutes,
+            topicSnapshot: it.topic_snapshot,
+            topicIdsSnapshot: it.topic_ids_snapshot,
+            teacherNote: it.teacher_note,
+            importance: it.importance,
+            hasTest: it.has_test,
+            subject: sub ? { _id: sub.id, title: sub.title, color: sub.color } : null,
+          };
+        });
+        return json({
+          plan: {
+            _id: plan.id,
+            title: plan.title,
+            status: plan.status,
+            weekStart: plan.week_start,
+          },
+          items: mapped,
+          dow: toSchoolDayOfWeek(new Date()),
+        });
+      }
       case "studentsavelog": {
         const studentId = await resolveStudentSession(supabase, String(body.sessionToken || ""));
         const workDate = body.workDateIso
@@ -440,7 +492,7 @@ Deno.serve(async (req) => {
         const { data: items, error: e2 } = await supabase
           .from("plan_items")
           .select(
-            "id, day_of_week, slot_order, start_time, duration_minutes, topic_snapshot, topic_ids_snapshot, teacher_note, importance, has_test, subject_id, subjects ( id, title )",
+            "id, day_of_week, slot_order, start_time, duration_minutes, topic_snapshot, topic_ids_snapshot, teacher_note, importance, has_test, subject_id, subjects ( id, title, color )",
           )
           .eq("weekly_plan_id", plan.id)
           .order("day_of_week", { ascending: true })
