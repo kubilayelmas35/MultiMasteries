@@ -1,30 +1,61 @@
 grade,track,Subject,title,sortOrder,defaultMinutes
-11,sozel,Türk Dili ve Edebiyatı,Güzel sanatlar ve edebiyat,10,50
-11,sozel,Türk Dili ve Edebiyatı,Şiir nazım biçimleri,20,50
-11,sozel,Türk Dili ve Edebiyatı,Divan edebiyatı temel,30,55
-11,sozel,Türk Dili ve Edebiyatı,Halk edebiyatı,40,50
-11,sozel,Türk Dili ve Edebiyatı,Tanzimat edebiyatı,50,50
-11,sozel,Türk Dili ve Edebiyatı,Servet-i Fünun ve Fecr-i Ati,60,50
-11,sozel,Türk Dili ve Edebiyatı,Milli edebiyat,70,50
-11,sozel,Tarih,Tarih ve zaman,10,45
-11,sozel,Tarih,İlk ve orta çağlarda Türk dünyası,20,45
-11,sozel,Tarih,İslamiyet öncesi Türk tarihi,30,45
-11,sozel,Tarih,İslamiyetin doğuşu ve ilk dönem,40,45
-11,sozel,Tarih,Yerleşme ve devletleşme sürecinde Selçuklu Türkiyesi,50,50
-11,sozel,Tarih,Beylikten devlete Osmanlı siyaseti,60,50
-11,sozel,Tarih,Dünya güç dengesi içinde Osmanlı,70,50
-11,sozel,Tarih,Devrimler çağında değişen devlet ve toplum,80,50
-11,sozel,Coğrafya,Doğal sistemler,10,45
-11,sozel,Coğrafya,Beşeri sistemler,20,45
-11,sozel,Coğrafya,Küresel ortam bölgeler ve ülkeler,30,45
-11,sozel,Coğrafya,Çevre ve toplum,40,45
-11,sozel,Coğrafya,Türkiye fiziki coğrafya genel,50,45
-11,sozel,Coğrafya,Türkiye beşeri coğrafya genel,60,45
-11,sozel,Felsefe,Felsefeyi tanıma,10,40
-11,sozel,Felsefe,Bilgi felsefesi,20,45
-11,sozel,Felsefe,Varlık felsefesi,30,45
-11,sozel,Felsefe,Ahlak felsefesi,40,45
-11,sozel,Felsefe,Siyaset felsefesi,50,45
-11,sozel,Türkçe,TYT paragraf,10,40
-11,sozel,Türkçe,Sözcük ve cümlede anlam,20,40
-11,sozel,Türkçe,Dil bilgisi TYT,30,40
+11,sozel,Türk Dili ve Edebiyatı,Güzel sanatlar,10,50
+11,sozel,Türk Dili ve Edebiyatı,Şiir türleri,20,50
+11,sozel,Türk Dili ve Edebiyatı,Nazım biçimleri,30,50
+11,sozel,Türk Dili ve Edebiyatı,Divan edebiyatı,40,50
+11,sozel,Türk Dili ve Edebiyatı,Halk edebiyatı,50,50
+11,sozel,Türk Dili ve Edebiyatı,Tanzimat,60,50
+11,sozel,Türk Dili ve Edebiyatı,Servet Fünun,70,50
+11,sozel,Türk Dili ve Edebiyatı,Fecr-i Ati,80,50
+11,sozel,Türk Dili ve Edebiyatı,Milli edebiyat,90,50
+11,sozel,Türk Dili ve Edebiyatı,Cumhuriyet şiiri,100,50
+11,sozel,Türk Dili ve Edebiyatı,Cumhuriyet romanı,110,50
+11,sozel,Türk Dili ve Edebiyatı,Tiyatro,120,50
+11,sozel,Türk Dili ve Edebiyatı,Deneme,130,50
+11,sozel,Türk Dili ve Edebiyatı,Edebi akımlar,140,50
+11,sozel,Türk Dili ve Edebiyatı,Metin çözümleme,150,50
+11,sozel,Tarih,Tarih bilimi,10,45
+11,sozel,Tarih,İlk çağ,20,45
+11,sozel,Tarih,İlk Türk devletleri,30,45
+11,sozel,Tarih,İslam tarihi,40,45
+11,sozel,Tarih,Selçuklu,50,45
+11,sozel,Tarih,Osmanlı kuruluş,60,45
+11,sozel,Tarih,Osmanlı yükselme,70,45
+11,sozel,Tarih,Osmanlı duraklama,80,45
+11,sozel,Tarih,Osmanlı gerileme,90,45
+11,sozel,Tarih,Islahatlar,100,45
+11,sozel,Tarih,Trablus Balkan,110,45
+11,sozel,Tarih,I. Dünya Savaşı,120,45
+11,sozel,Tarih,Kurtuluş Savaşı,130,45
+11,sozel,Tarih,Atatürk dönemi,140,45
+11,sozel,Tarih,II. Dünya Savaşı,150,45
+11,sozel,Tarih,Soğuk savaş,160,45
+11,sozel,Tarih,Küreselleşme,170,45
+11,sozel,Coğrafya,Harita,10,45
+11,sozel,Coğrafya,İklim,20,45
+11,sozel,Coğrafya,Yer şekilleri,30,45
+11,sozel,Coğrafya,Nüfus,40,45
+11,sozel,Coğrafya,Yerleşme,50,45
+11,sozel,Coğrafya,Ekonomik faaliyetler,60,45
+11,sozel,Coğrafya,Türkiye fiziki,70,45
+11,sozel,Coğrafya,Türkiye beşeri,80,45
+11,sozel,Coğrafya,Bölgeler,90,45
+11,sozel,Coğrafya,Çevre,100,45
+11,sozel,Coğrafya,Doğal afetler,110,45
+11,sozel,Coğrafya,Küresel ortam,120,45
+11,sozel,Felsefe,Felsefeye giriş,10,40
+11,sozel,Felsefe,Bilgi felsefesi,20,40
+11,sozel,Felsefe,Varlık felsefesi,30,40
+11,sozel,Felsefe,Ahlak felsefesi,40,40
+11,sozel,Felsefe,Siyaset felsefesi,50,40
+11,sozel,Felsefe,Sanat felsefesi,60,40
+11,sozel,Felsefe,Din felsefesi,70,40
+11,sozel,Felsefe,Bilim felsefesi,80,40
+11,sozel,Türkçe,Paragraf ana düşünce,10,40
+11,sozel,Türkçe,Paragraf yardımcı düşünce,20,40
+11,sozel,Türkçe,Paragraf tamamlama,30,40
+11,sozel,Türkçe,Cümle tamamlama,40,40
+11,sozel,Türkçe,Anlatım bozuklukları,50,40
+11,sozel,Türkçe,Sözcükte anlam,60,40
+11,sozel,Türkçe,Cümlede anlam,70,40
+11,sozel,Türkçe,Yazım kuralları,80,40

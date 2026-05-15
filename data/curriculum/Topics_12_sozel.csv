@@ -1,18 +1,61 @@
 grade,track,Subject,title,sortOrder,defaultMinutes
-12,sozel,Türk Dili ve Edebiyatı,Cumhuriyet dönemi Türk şiiri,10,55
-12,sozel,Türk Dili ve Edebiyatı,Cumhuriyet dönemi Türk romanı,20,55
-12,sozel,Türk Dili ve Edebiyatı,Dünya edebiyatı akımları,30,50
-12,sozel,Tarih,II. Dünya Savaşı,10,50
-12,sozel,Tarih,Soğuk savaş dönemi,20,50
-12,sozel,Tarih,Yumuşama ve sonuçları,30,50
-12,sozel,Tarih,Küreselleşen dünya,40,45
-12,sozel,Tarih,Türkiye tarihi çağdaş,50,50
-12,sozel,Coğrafya,Türkiye ekonomik coğrafya detay,10,50
-12,sozel,Coğrafya,Çevre sorunları ve sürdürülebilirlik,20,45
-12,sozel,Coğrafya,Küresel ortam,30,45
-12,sozel,Felsefe,Felsefe ve psikoloji ilişkisi,10,40
-12,sozel,Felsefe,Sanat felsefesi,20,40
-12,sozel,Felsefe,Din felsefesi,30,40
-12,sozel,Felsefe,Bilim felsefesi,40,40
-12,sozel,Türkçe,AYT anlatım,10,40
-12,sozel,Türkçe,Dil bilgisi AYT,20,40
+12,sozel,Türk Dili ve Edebiyatı,Güzel sanatlar,10,50
+12,sozel,Türk Dili ve Edebiyatı,Şiir türleri,20,50
+12,sozel,Türk Dili ve Edebiyatı,Nazım biçimleri,30,50
+12,sozel,Türk Dili ve Edebiyatı,Divan edebiyatı,40,50
+12,sozel,Türk Dili ve Edebiyatı,Halk edebiyatı,50,50
+12,sozel,Türk Dili ve Edebiyatı,Tanzimat,60,50
+12,sozel,Türk Dili ve Edebiyatı,Servet Fünun,70,50
+12,sozel,Türk Dili ve Edebiyatı,Fecr-i Ati,80,50
+12,sozel,Türk Dili ve Edebiyatı,Milli edebiyat,90,50
+12,sozel,Türk Dili ve Edebiyatı,Cumhuriyet şiiri,100,50
+12,sozel,Türk Dili ve Edebiyatı,Cumhuriyet romanı,110,50
+12,sozel,Türk Dili ve Edebiyatı,Tiyatro,120,50
+12,sozel,Türk Dili ve Edebiyatı,Deneme,130,50
+12,sozel,Türk Dili ve Edebiyatı,Edebi akımlar,140,50
+12,sozel,Türk Dili ve Edebiyatı,Metin çözümleme,150,50
+12,sozel,Tarih,Tarih bilimi,10,45
+12,sozel,Tarih,İlk çağ,20,45
+12,sozel,Tarih,İlk Türk devletleri,30,45
+12,sozel,Tarih,İslam tarihi,40,45
+12,sozel,Tarih,Selçuklu,50,45
+12,sozel,Tarih,Osmanlı kuruluş,60,45
+12,sozel,Tarih,Osmanlı yükselme,70,45
+12,sozel,Tarih,Osmanlı duraklama,80,45
+12,sozel,Tarih,Osmanlı gerileme,90,45
+12,sozel,Tarih,Islahatlar,100,45
+12,sozel,Tarih,Trablus Balkan,110,45
+12,sozel,Tarih,I. Dünya Savaşı,120,45
+12,sozel,Tarih,Kurtuluş Savaşı,130,45
+12,sozel,Tarih,Atatürk dönemi,140,45
+12,sozel,Tarih,II. Dünya Savaşı,150,45
+12,sozel,Tarih,Soğuk savaş,160,45
+12,sozel,Tarih,Küreselleşme,170,45
+12,sozel,Coğrafya,Harita,10,45
+12,sozel,Coğrafya,İklim,20,45
+12,sozel,Coğrafya,Yer şekilleri,30,45
+12,sozel,Coğrafya,Nüfus,40,45
+12,sozel,Coğrafya,Yerleşme,50,45
+12,sozel,Coğrafya,Ekonomik faaliyetler,60,45
+12,sozel,Coğrafya,Türkiye fiziki,70,45
+12,sozel,Coğrafya,Türkiye beşeri,80,45
+12,sozel,Coğrafya,Bölgeler,90,45
+12,sozel,Coğrafya,Çevre,100,45
+12,sozel,Coğrafya,Doğal afetler,110,45
+12,sozel,Coğrafya,Küresel ortam,120,45
+12,sozel,Felsefe,Felsefeye giriş,10,40
+12,sozel,Felsefe,Bilgi felsefesi,20,40
+12,sozel,Felsefe,Varlık felsefesi,30,40
+12,sozel,Felsefe,Ahlak felsefesi,40,40
+12,sozel,Felsefe,Siyaset felsefesi,50,40
+12,sozel,Felsefe,Sanat felsefesi,60,40
+12,sozel,Felsefe,Din felsefesi,70,40
+12,sozel,Felsefe,Bilim felsefesi,80,40
+12,sozel,Türkçe,Paragraf ana düşünce,10,40
+12,sozel,Türkçe,Paragraf yardımcı düşünce,20,40
+12,sozel,Türkçe,Paragraf tamamlama,30,40
+12,sozel,Türkçe,Cümle tamamlama,40,40
+12,sozel,Türkçe,Anlatım bozuklukları,50,40
+12,sozel,Türkçe,Sözcükte anlam,60,40
+12,sozel,Türkçe,Cümlede anlam,70,40
+12,sozel,Türkçe,Yazım kuralları,80,40

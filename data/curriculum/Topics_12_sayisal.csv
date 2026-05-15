@@ -1,24 +1,68 @@
 grade,track,Subject,title,sortOrder,defaultMinutes
-12,sayisal,Matematik,İleri türev uygulamaları,10,55
-12,sayisal,Matematik,İntegral uygulamaları alan hacim,20,55
-12,sayisal,Matematik,Diferansiyel denklemler giriş,30,50
-12,sayisal,Matematik,Analitik düzlemde konikler,40,55
-12,sayisal,Matematik,Karmaşık sayılar,50,50
-12,sayisal,Matematik,Diziler ve seriler temel,60,50
-12,sayisal,Geometri,Çember analitiği ileri,10,50
-12,sayisal,Geometri,Konikler,20,55
-12,sayisal,Geometri,Katı cisimler ve yüzey alanları,30,50
-12,sayisal,Fizik,Alternatif akım,10,55
-12,sayisal,Fizik,Dalgalar,20,50
-12,sayisal,Fizik,Atom fiziğine giriş,30,50
-12,sayisal,Fizik,Modern fizik özel görelilik giriş,40,50
-12,sayisal,Kimya,Organik kimya reaksiyonlar,10,60
-12,sayisal,Kimya,Elektrokimya,20,55
-12,sayisal,Kimya,Kimyasal kinetik,30,50
-12,sayisal,Kimya,Kimyasal denge ileri,40,55
-12,sayisal,Biyoloji,Komünite ve popülasyon ekolojisi,10,50
-12,sayisal,Biyoloji,Güncel çevre sorunları,20,45
-12,sayisal,Biyoloji,Genetik mühendisliği ve biyoteknoloji,30,50
-12,sayisal,Türkçe,AYT dil bilgisi,10,40
-12,sayisal,Türkçe,Anlatım teknikleri,20,40
-12,sayisal,Türkçe,Metin türleri,30,40
+12,sayisal,Matematik,Trigonometri,10,50
+12,sayisal,Matematik,Logaritma,20,50
+12,sayisal,Matematik,Diziler,30,50
+12,sayisal,Matematik,Limit,40,50
+12,sayisal,Matematik,Türev tanım,50,50
+12,sayisal,Matematik,Türev uygulamaları,60,50
+12,sayisal,Matematik,İntegral,70,50
+12,sayisal,Matematik,Belirli integral,80,50
+12,sayisal,Matematik,Karmaşık sayılar,90,50
+12,sayisal,Matematik,Permütasyon kombinasyon,100,50
+12,sayisal,Matematik,Olasılık,110,50
+12,sayisal,Matematik,Fonksiyonler tekrar,120,50
+12,sayisal,Matematik,Polinomlar,130,50
+12,sayisal,Matematik,İkinci derece,140,50
+12,sayisal,Matematik,Eşitsizlikler,150,50
+12,sayisal,Matematik,Parabol,160,50
+12,sayisal,Geometri,Üçgenler,10,50
+12,sayisal,Geometri,Dörtgenler,20,50
+12,sayisal,Geometri,Çokgenler,30,50
+12,sayisal,Geometri,Çember,40,50
+12,sayisal,Geometri,Analitik geometri doğru,50,50
+12,sayisal,Geometri,Analitik geometri çember,60,50
+12,sayisal,Geometri,Katı cisimler,70,50
+12,sayisal,Geometri,Trigonometrik fonksiyonlar,80,50
+12,sayisal,Geometri,Dönüşümler,90,50
+12,sayisal,Fizik,Vektörler,10,50
+12,sayisal,Fizik,Newton,20,50
+12,sayisal,Fizik,İş güç enerji,30,50
+12,sayisal,Fizik,Momentum,40,50
+12,sayisal,Fizik,Elektrostatik,50,50
+12,sayisal,Fizik,Elektrik akımı,60,50
+12,sayisal,Fizik,Manyetizma,70,50
+12,sayisal,Fizik,İndüksiyon,80,50
+12,sayisal,Fizik,Alternatif akım,90,50
+12,sayisal,Fizik,Dalgalar,100,50
+12,sayisal,Fizik,Optik,110,50
+12,sayisal,Fizik,Modern fizik giriş,120,50
+12,sayisal,Kimya,Kimyasal hesap,10,50
+12,sayisal,Kimya,Gazlar,20,50
+12,sayisal,Kimya,Çözeltiler,30,50
+12,sayisal,Kimya,Asit baz,40,50
+12,sayisal,Kimya,Tepkime hızı,50,50
+12,sayisal,Kimya,Kimyasal denge,60,50
+12,sayisal,Kimya,Elektrokimya,70,50
+12,sayisal,Kimya,Organik kimya temel,80,50
+12,sayisal,Kimya,Organik reaksiyonlar,90,50
+12,sayisal,Kimya,Karbon kimyası,100,50
+12,sayisal,Biyoloji,Sinir sistemi,10,50
+12,sayisal,Biyoloji,Endokrin,20,50
+12,sayisal,Biyoloji,Duyu organları,30,50
+12,sayisal,Biyoloji,Destek hareket,40,50
+12,sayisal,Biyoloji,Sindirim,50,50
+12,sayisal,Biyoloji,Solunum,60,50
+12,sayisal,Biyoloji,Dolaşım,70,50
+12,sayisal,Biyoloji,Boşaltım,80,50
+12,sayisal,Biyoloji,Üreme,90,50
+12,sayisal,Biyoloji,Komünite ekolojisi,100,50
+12,sayisal,Biyoloji,Popülasyon ekolojisi,110,50
+12,sayisal,Biyoloji,Biyoteknoloji,120,50
+12,sayisal,Türkçe,Paragraf ana düşünce,10,40
+12,sayisal,Türkçe,Paragraf yardımcı düşünce,20,40
+12,sayisal,Türkçe,Paragraf tamamlama,30,40
+12,sayisal,Türkçe,Cümle tamamlama,40,40
+12,sayisal,Türkçe,Anlatım bozuklukları,50,40
+12,sayisal,Türkçe,Sözcükte anlam,60,40
+12,sayisal,Türkçe,Cümlede anlam,70,40
+12,sayisal,Türkçe,Yazım kuralları,80,40

@@ -1,36 +1,68 @@
 grade,track,Subject,title,sortOrder,defaultMinutes
-11,sayisal,Matematik,Trigonometri,10,55
-11,sayisal,Matematik,Logaritma,20,55
+11,sayisal,Matematik,Trigonometri,10,50
+11,sayisal,Matematik,Logaritma,20,50
 11,sayisal,Matematik,Diziler,30,50
-11,sayisal,Matematik,Limit ve süreklilik,40,55
-11,sayisal,Matematik,Türev tanım ve kurallar,50,60
-11,sayisal,Matematik,Türevin uygulamaları,60,60
-11,sayisal,Matematik,Belirsiz integral,70,55
-11,sayisal,Matematik,Belirli integral ve uygulamaları,80,55
-11,sayisal,Geometri,Trigonometrik fonksiyonlar,10,50
-11,sayisal,Geometri,Doğrunun analitiği,20,50
-11,sayisal,Geometri,Çemberin analitiği,30,50
-11,sayisal,Geometri,Katı cisimler,40,50
+11,sayisal,Matematik,Limit,40,50
+11,sayisal,Matematik,Türev tanım,50,50
+11,sayisal,Matematik,Türev uygulamaları,60,50
+11,sayisal,Matematik,İntegral,70,50
+11,sayisal,Matematik,Belirli integral,80,50
+11,sayisal,Matematik,Karmaşık sayılar,90,50
+11,sayisal,Matematik,Permütasyon kombinasyon,100,50
+11,sayisal,Matematik,Olasılık,110,50
+11,sayisal,Matematik,Fonksiyonler tekrar,120,50
+11,sayisal,Matematik,Polinomlar,130,50
+11,sayisal,Matematik,İkinci derece,140,50
+11,sayisal,Matematik,Eşitsizlikler,150,50
+11,sayisal,Matematik,Parabol,160,50
+11,sayisal,Geometri,Üçgenler,10,50
+11,sayisal,Geometri,Dörtgenler,20,50
+11,sayisal,Geometri,Çokgenler,30,50
+11,sayisal,Geometri,Çember,40,50
+11,sayisal,Geometri,Analitik geometri doğru,50,50
+11,sayisal,Geometri,Analitik geometri çember,60,50
+11,sayisal,Geometri,Katı cisimler,70,50
+11,sayisal,Geometri,Trigonometrik fonksiyonlar,80,50
+11,sayisal,Geometri,Dönüşümler,90,50
 11,sayisal,Fizik,Vektörler,10,50
-11,sayisal,Fizik,Newton hareket yasaları,20,55
+11,sayisal,Fizik,Newton,20,50
 11,sayisal,Fizik,İş güç enerji,30,50
-11,sayisal,Fizik,İtme ve momentum,40,50
-11,sayisal,Fizik,Elektrostatik,50,55
-11,sayisal,Fizik,Manyetizma ve elektromanyetik indüklenim temel,60,55
-11,sayisal,Kimya,Kimyasal hesaplamalar,10,50
+11,sayisal,Fizik,Momentum,40,50
+11,sayisal,Fizik,Elektrostatik,50,50
+11,sayisal,Fizik,Elektrik akımı,60,50
+11,sayisal,Fizik,Manyetizma,70,50
+11,sayisal,Fizik,İndüksiyon,80,50
+11,sayisal,Fizik,Alternatif akım,90,50
+11,sayisal,Fizik,Dalgalar,100,50
+11,sayisal,Fizik,Optik,110,50
+11,sayisal,Fizik,Modern fizik giriş,120,50
+11,sayisal,Kimya,Kimyasal hesap,10,50
 11,sayisal,Kimya,Gazlar,20,50
-11,sayisal,Kimya,Çözeltiler ve çözünürlük,30,50
-11,sayisal,Kimya,Asit baz dengesi,40,55
-11,sayisal,Kimya,Kimyasal tepkimelerde denge,50,55
-11,sayisal,Kimya,Organik kimya temel sınıflar,60,60
+11,sayisal,Kimya,Çözeltiler,30,50
+11,sayisal,Kimya,Asit baz,40,50
+11,sayisal,Kimya,Tepkime hızı,50,50
+11,sayisal,Kimya,Kimyasal denge,60,50
+11,sayisal,Kimya,Elektrokimya,70,50
+11,sayisal,Kimya,Organik kimya temel,80,50
+11,sayisal,Kimya,Organik reaksiyonlar,90,50
+11,sayisal,Kimya,Karbon kimyası,100,50
 11,sayisal,Biyoloji,Sinir sistemi,10,50
-11,sayisal,Biyoloji,Endokrin sistem,20,50
-11,sayisal,Biyoloji,Duyu organları,30,45
-11,sayisal,Biyoloji,Destek ve hareket,40,50
-11,sayisal,Biyoloji,Sindirim sistemi,50,50
-11,sayisal,Biyoloji,Solunum sistemi,60,50
-11,sayisal,Biyoloji,Dolaşım sistemi,70,50
-11,sayisal,Biyoloji,Üriner sistem,80,45
-11,sayisal,Türkçe,TYT paragraf stratejileri,10,40
-11,sayisal,Türkçe,Anlam bilgisi çıkarım,20,40
-11,sayisal,Türkçe,Dil bilgisi cümle ögeleri,30,40
+11,sayisal,Biyoloji,Endokrin,20,50
+11,sayisal,Biyoloji,Duyu organları,30,50
+11,sayisal,Biyoloji,Destek hareket,40,50
+11,sayisal,Biyoloji,Sindirim,50,50
+11,sayisal,Biyoloji,Solunum,60,50
+11,sayisal,Biyoloji,Dolaşım,70,50
+11,sayisal,Biyoloji,Boşaltım,80,50
+11,sayisal,Biyoloji,Üreme,90,50
+11,sayisal,Biyoloji,Komünite ekolojisi,100,50
+11,sayisal,Biyoloji,Popülasyon ekolojisi,110,50
+11,sayisal,Biyoloji,Biyoteknoloji,120,50
+11,sayisal,Türkçe,Paragraf ana düşünce,10,40
+11,sayisal,Türkçe,Paragraf yardımcı düşünce,20,40
+11,sayisal,Türkçe,Paragraf tamamlama,30,40
+11,sayisal,Türkçe,Cümle tamamlama,40,40
+11,sayisal,Türkçe,Anlatım bozuklukları,50,40
+11,sayisal,Türkçe,Sözcükte anlam,60,40
+11,sayisal,Türkçe,Cümlede anlam,70,40
+11,sayisal,Türkçe,Yazım kuralları,80,40

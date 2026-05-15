@@ -1,7 +1,40 @@
 grade,track,Subject,title,sortOrder,defaultMinutes
-12,tyt,Türkçe,Paragraf tekrar paketi,10,40
-12,tyt,Türkçe,Dil bilgisi tekrar,20,35
-12,tyt,Matematik,TYT deneme analizi konu dağılımı,10,50
-12,tyt,Matematik,Hızlı tekrar sayılar ve kümeler,20,45
-12,tyt,Matematik,Problemler,30,50
-12,tyt,Fen Bilimleri,TYT fen tekrar fizik kimya biyo özet,10,55
+12,tyt,Türkçe,Paragraf ana düşünce,10,40
+12,tyt,Türkçe,Paragraf yardımcı düşünce,20,40
+12,tyt,Türkçe,Paragraf tamamlama,30,40
+12,tyt,Türkçe,Cümle tamamlama,40,40
+12,tyt,Türkçe,Anlatım bozuklukları,50,40
+12,tyt,Türkçe,Sözcükte anlam,60,40
+12,tyt,Türkçe,Cümlede anlam,70,40
+12,tyt,Türkçe,Yazım kuralları,80,40
+12,tyt,Türkçe,Noktalama,90,40
+12,tyt,Türkçe,Sözel mantık,100,40
+12,tyt,Türkçe,Görsel okuma,110,40
+12,tyt,Türkçe,Anlatım teknikleri,120,40
+12,tyt,Matematik,Temel kavramlar,10,45
+12,tyt,Matematik,Sayılar,20,45
+12,tyt,Matematik,Bölünebilme,30,45
+12,tyt,Matematik,Rasyonel sayılar,40,45
+12,tyt,Matematik,Üslü,50,45
+12,tyt,Matematik,Köklü,60,45
+12,tyt,Matematik,Çarpanlara ayırma,70,45
+12,tyt,Matematik,Oran orantı,80,45
+12,tyt,Matematik,Problemler,90,45
+12,tyt,Matematik,Kümeler,100,45
+12,tyt,Matematik,Fonksiyonlar,110,45
+12,tyt,Matematik,Polinomlar,120,45
+12,tyt,Matematik,İkinci derece denklemler,130,45
+12,tyt,Matematik,Permütasyon,140,45
+12,tyt,Matematik,Kombinasyon,150,45
+12,tyt,Matematik,Olasılık,160,45
+12,tyt,Matematik,Veri,170,45
+12,tyt,Fen Bilimleri,Fizik hareket,10,45
+12,tyt,Fen Bilimleri,Fizik kuvvet,20,45
+12,tyt,Fen Bilimleri,Fizik enerji,30,45
+12,tyt,Fen Bilimleri,Kimya madde,40,45
+12,tyt,Fen Bilimleri,Kimya atom,50,45
+12,tyt,Fen Bilimleri,Kimya periyodik,60,45
+12,tyt,Fen Bilimleri,Kimya bağlar,70,45
+12,tyt,Fen Bilimleri,Biyoloji hücre,80,45
+12,tyt,Fen Bilimleri,Biyoloji sistemler,90,45
+12,tyt,Fen Bilimleri,Biyoloji ekoloji,100,45

@@ -47,6 +47,21 @@ function isoDate(d: Date) {
   return d.toISOString().slice(0, 10);
 }
 
+function characterStageFromXp(xp: number) {
+  if (xp < 50) return 0;
+  if (xp < 150) return 1;
+  if (xp < 300) return 2;
+  if (xp < 500) return 3;
+  return 4;
+}
+
+function characterMeta(stage: number) {
+  const names = ["Bebek", "Çocuk", "Genç", "Öğrenci", "Usta"];
+  const emojis = ["👶", "🧒", "🧑", "🎓", "⭐"];
+  const s = Math.min(4, Math.max(0, stage));
+  return { stage: s, name: names[s], emoji: emojis[s] };
+}
+
 function sb(): SupabaseClient {
   const url = Deno.env.get("SUPABASE_URL")!;
   const key = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -278,8 +293,28 @@ Deno.serve(async (req) => {
           .order("day_of_week", { ascending: true })
           .order("slot_order", { ascending: true });
         if (error) throw error;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const wd = isoDate(today);
+        const itemIds = (items || []).map((it: { id: string }) => it.id);
+        let logsByItem: Record<string, Record<string, unknown>> = {};
+        if (itemIds.length) {
+          const { data: logs } = await supabase
+            .from("study_logs")
+            .select("*")
+            .eq("student_id", studentId)
+            .eq("work_date", wd)
+            .in("plan_item_id", itemIds);
+          for (const lg of logs || []) {
+            logsByItem[String(lg.plan_item_id)] = lg;
+          }
+        }
+        const { data: stu } = await supabase.from("students").select("xp, character_stage, title").eq("id", studentId)
+          .maybeSingle();
+        const xp = Number(stu?.xp) || 0;
         const mapped = (items || []).map((it: Record<string, unknown>) => {
           const sub = it.subjects as { id: string; title: string; color: string } | null | undefined;
+          const log = logsByItem[String(it.id)];
           return {
             _id: it.id,
             dayOfWeek: it.day_of_week,
@@ -291,6 +326,16 @@ Deno.serve(async (req) => {
             importance: it.importance,
             hasTest: it.has_test,
             subject: sub ? { _id: sub.id, title: sub.title, color: sub.color } : null,
+            log: log
+              ? {
+                kanbanStatus: log.kanban_status,
+                mood: log.mood,
+                studentNote: log.student_note,
+                correct: log.correct,
+                wrong: log.wrong,
+                blank: log.blank,
+              }
+              : null,
           };
         });
         return json({
@@ -302,6 +347,10 @@ Deno.serve(async (req) => {
           },
           items: mapped,
           dow: toSchoolDayOfWeek(new Date()),
+          progress: {
+            xp,
+            character: characterMeta(Number(stu?.character_stage) || characterStageFromXp(xp)),
+          },
         });
       }
       case "studentsavelog": {
@@ -347,6 +396,10 @@ Deno.serve(async (req) => {
           .eq("student_id", studentId)
           .eq("work_date", wd)
           .maybeSingle();
+        const wasDone = ex?.id
+          ? (await supabase.from("study_logs").select("kanban_status").eq("id", ex.id).maybeSingle()).data
+              ?.kanban_status === "done"
+          : false;
         if (ex?.id) {
           const { error } = await supabase.from("study_logs").update(row).eq("id", ex.id);
           if (error) throw error;
@@ -354,7 +407,60 @@ Deno.serve(async (req) => {
           const { error } = await supabase.from("study_logs").insert(row);
           if (error) throw error;
         }
-        return json({ ok: true });
+        const nowDone = row.kanban_status === "done";
+        let xpGain = 0;
+        if (nowDone && !wasDone) {
+          xpGain = 10;
+          if (row.correct > 0 || row.wrong > 0 || row.blank > 0) xpGain += 5;
+          const { data: stu } = await supabase.from("students").select("xp").eq("id", studentId).maybeSingle();
+          const newXp = (Number(stu?.xp) || 0) + xpGain;
+          const stage = characterStageFromXp(newXp);
+          await supabase.from("students").update({ xp: newXp, character_stage: stage }).eq("id", studentId);
+        }
+        const { data: stuAfter } = await supabase.from("students").select("xp, character_stage").eq("id", studentId)
+          .maybeSingle();
+        const meta = characterMeta(Number(stuAfter?.character_stage) || 0);
+        return json({
+          ok: true,
+          xpGain,
+          xp: Number(stuAfter?.xp) || 0,
+          character: meta,
+        });
+      }
+      case "studentlogget": {
+        const studentId = await resolveStudentSession(supabase, String(body.sessionToken || ""));
+        const planItemId = String(body.planItemId || "");
+        const workDate = body.workDateIso ? new Date(String(body.workDateIso)) : new Date();
+        workDate.setHours(0, 0, 0, 0);
+        const wd = isoDate(workDate);
+        const { data: log, error } = await supabase
+          .from("study_logs")
+          .select("*")
+          .eq("plan_item_id", planItemId)
+          .eq("student_id", studentId)
+          .eq("work_date", wd)
+          .maybeSingle();
+        if (error) throw error;
+        return json({ log: log || null });
+      }
+      case "studentprogress": {
+        const studentId = await resolveStudentSession(supabase, String(body.sessionToken || ""));
+        const { data: stu, error } = await supabase.from("students").select("xp, character_stage, title").eq("id", studentId)
+          .maybeSingle();
+        if (error) throw error;
+        const xp = Number(stu?.xp) || 0;
+        const stage = Number(stu?.character_stage) || characterStageFromXp(xp);
+        const meta = characterMeta(stage);
+        const nextThreshold = [50, 150, 300, 500, 9999][stage] ?? 9999;
+        const prevThreshold = [0, 50, 150, 300, 500][stage] ?? 0;
+        const pct = Math.min(100, Math.round(((xp - prevThreshold) / (nextThreshold - prevThreshold)) * 100));
+        return json({
+          xp,
+          character: meta,
+          progressPercent: pct,
+          nextXp: nextThreshold,
+          displayName: stu?.title || "Öğrenci",
+        });
       }
       case "stafflogin": {
         const lc = normCode(body.loginCode);
@@ -433,16 +539,55 @@ Deno.serve(async (req) => {
         }));
         return json(mapped);
       }
+      case "staffcurriculumsubjects": {
+        await resolveStaffSession(supabase, String(body.staffToken || ""));
+        const grade = Number(body.grade);
+        if (!Number.isFinite(grade) || grade < 9 || grade > 12) {
+          throw new Error("Müfredat için sınıf 9–12 seçin");
+        }
+        let topicTrack = String(body.track || "").trim().toLowerCase();
+        if (grade <= 10) topicTrack = "lgs";
+        else if (!topicTrack) throw new Error("11–12 için bölüm seçin");
+        const { data: topicRows, error: e1 } = await supabase
+          .from("topics")
+          .select("subject_id, subjects ( id, title, color, sort_order )")
+          .eq("grade", grade)
+          .in("track", [topicTrack, "hepsi"]);
+        if (e1) throw e1;
+        const map = new Map<string, Record<string, unknown>>();
+        for (const t of topicRows || []) {
+          const sub = t.subjects as Record<string, unknown> | null;
+          if (sub?.id) map.set(String(sub.id), sub);
+        }
+        const out = Array.from(map.values())
+          .map((s) => ({
+            _id: s.id,
+            title: s.title,
+            color: s.color,
+            sortOrder: s.sort_order,
+          }))
+          .sort((a, b) => Number(a.sortOrder || 0) - Number(b.sortOrder || 0));
+        return json(out);
+      }
       case "stafftopics": {
         const staffId = await resolveStaffSession(supabase, String(body.staffToken || ""));
         const studentId = String(body.studentId || "");
         const subjectId = String(body.subjectId || "");
         await assertStaffOwnsStudent(supabase, staffId, studentId);
-        const { data: stu, error: e1 } = await supabase.from("students").select("grade, track").eq("id", studentId).maybeSingle();
-        if (e1) throw e1;
-        if (!stu) throw new Error("Öğrenci yok");
-        const grade = Number(stu.grade);
-        const topicTrack = grade <= 10 ? "lgs" : String(stu.track || "").trim().toLowerCase();
+        let grade = body.grade != null ? Number(body.grade) : NaN;
+        let topicTrack = String(body.track || "").trim().toLowerCase();
+        if (!Number.isFinite(grade) || grade < 9 || grade > 12) {
+          const { data: stu, error: e1 } = await supabase.from("students").select("grade, track").eq("id", studentId)
+            .maybeSingle();
+          if (e1) throw e1;
+          if (!stu) throw new Error("Öğrenci yok");
+          grade = Number(stu.grade);
+          topicTrack = grade <= 10 ? "lgs" : String(stu.track || "").trim().toLowerCase();
+        } else if (grade <= 10) {
+          topicTrack = "lgs";
+        } else if (!topicTrack) {
+          throw new Error("11–12 müfredatı için bölüm seçin");
+        }
         const { data: a, error: e2 } = await supabase
           .from("topics")
           .select("*")

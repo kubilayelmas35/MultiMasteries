@@ -1,30 +1,58 @@
 grade,track,Subject,title,sortOrder,defaultMinutes
-10,lgs,Türkçe,Anlatım bozuklukları,10,45
-10,lgs,Türkçe,Paragraf çıkarım,20,45
-10,lgs,Türkçe,Şiir temel kavramlar,30,40
-10,lgs,Türkçe,Dil bilgisi sözcük türleri,40,45
-10,lgs,Matematik,Fonksiyon kavramı,10,50
-10,lgs,Matematik,Doğrusal fonksiyonlar,20,50
-10,lgs,Matematik,Üçgenler ve benzerlik,30,50
-10,lgs,Matematik,Dönme ve geometrik cisimler,40,50
-10,lgs,Matematik,Olasılık temel,50,45
-10,lgs,Matematik,İstatistik grafik yorumlama,60,40
-10,lgs,Fen Bilimleri,Kimyasal tepkimeler,10,50
-10,lgs,Fen Bilimleri,Asitler ve bazlar,20,50
-10,lgs,Fen Bilimleri,Kuvvet ve enerji,30,50
-10,lgs,Fen Bilimleri,Basıt elektrik devreleri,40,45
-10,lgs,Fen Bilimleri,Üreme ve embriyo gelişimi,50,45
-10,lgs,Fen Bilimleri,Ekosistem ve enerji akışı,60,45
-10,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Osmanlı kültür ve medeniyeti,10,45
-10,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Osmanlıda demokratikleşme hareketleri,20,45
-10,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,I. Dünya Savaşı,30,45
-10,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Kurtuluş Savaşı hazırlık dönemi,40,45
-10,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Milli mücadele cepheleri,50,45
-10,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Atatürkçülük ve çağdaşlaşma,60,45
-10,lgs,Din Kültürü ve Ahlak Bilgisi,Kurana göre Hz. Muhammed,10,40
-10,lgs,Din Kültürü ve Ahlak Bilgisi,İslam düşüncesinde yorumlar,20,40
-10,lgs,Din Kültürü ve Ahlak Bilgisi,Ahlaki olgular,30,40
-10,lgs,İngilizce,Modal verbs temel,10,40
-10,lgs,İngilizce,If clauses type 1,20,40
-10,lgs,İngilizce,Passive voice giriş,30,40
-10,lgs,İngilizce,Reported speech giriş,40,40
+10,lgs,Türkçe,Paragraf çıkarım,10,45
+10,lgs,Türkçe,Paragraf tamamlama,20,45
+10,lgs,Türkçe,Cümle tamamlama,30,45
+10,lgs,Türkçe,Anlatım bozuklukları,40,45
+10,lgs,Türkçe,Sözcük türleri,50,45
+10,lgs,Türkçe,Fiil çatıları,60,45
+10,lgs,Türkçe,Cümle türleri,70,45
+10,lgs,Türkçe,Yazım-noktalama tekrar,80,45
+10,lgs,Türkçe,Şiir türleri,90,45
+10,lgs,Türkçe,Edebi sanatlar,100,45
+10,lgs,Türkçe,Metin türleri,110,45
+10,lgs,Matematik,Fonksiyonlar,10,45
+10,lgs,Matematik,Doğrusal fonksiyonlar,20,45
+10,lgs,Matematik,Eşitsizlikler,30,45
+10,lgs,Matematik,Üçgenler,40,45
+10,lgs,Matematik,Benzerlik,50,45
+10,lgs,Matematik,Dönüşüm geometrisi,60,45
+10,lgs,Matematik,Çember,70,45
+10,lgs,Matematik,Katı cisimler,80,45
+10,lgs,Matematik,Olasılık,90,45
+10,lgs,Matematik,İstatistik,100,45
+10,lgs,Matematik,Veri yorumlama,110,45
+10,lgs,Matematik,Kareköklü ifadeler,120,45
+10,lgs,Matematik,Polinomlar (giriş),130,45
+10,lgs,Fen Bilimleri,Kimyasal tepkimeler,10,45
+10,lgs,Fen Bilimleri,Asit-baz,20,45
+10,lgs,Fen Bilimleri,Periyodik tablo,30,45
+10,lgs,Fen Bilimleri,Kuvvet ve enerji,40,45
+10,lgs,Fen Bilimleri,Elektrik,50,45
+10,lgs,Fen Bilimleri,Manyetizma,60,45
+10,lgs,Fen Bilimleri,Optik,70,45
+10,lgs,Fen Bilimleri,Üreme ve embriyo,80,45
+10,lgs,Fen Bilimleri,Kalıtım,90,45
+10,lgs,Fen Bilimleri,Ekosistem,100,45
+10,lgs,Fen Bilimleri,Enerji dönüşümleri,110,45
+10,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Osmanlı kültür,10,45
+10,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Aydınlanma,20,45
+10,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Osmanlı reformları,30,45
+10,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,I. Dünya Savaşı,40,45
+10,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Mondros,50,45
+10,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Kurtuluş hazırlık,60,45
+10,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Kongreler,70,45
+10,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Cepheler,80,45
+10,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Lozan,90,45
+10,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Cumhuriyet inkılapları,100,45
+10,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Atatürk ilkeleri,110,45
+10,lgs,Din Kültürü ve Ahlak Bilgisi,Kur'an yorumu,10,40
+10,lgs,Din Kültürü ve Ahlak Bilgisi,Hz. Muhammed hayatı,20,40
+10,lgs,Din Kültürü ve Ahlak Bilgisi,İslam düşüncesi,30,40
+10,lgs,Din Kültürü ve Ahlak Bilgisi,Ahlaki değerler,40,40
+10,lgs,Din Kültürü ve Ahlak Bilgisi,Din ve bilim,50,40
+10,lgs,İngilizce,Modal verbs,10,40
+10,lgs,İngilizce,If clauses,20,40
+10,lgs,İngilizce,Passive voice,30,40
+10,lgs,İngilizce,Reported speech,40,40
+10,lgs,İngilizce,Relative clauses,50,40
+10,lgs,İngilizce,Phrasal verbs,60,40
