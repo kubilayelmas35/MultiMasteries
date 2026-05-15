@@ -56,10 +56,101 @@ function characterStageFromXp(xp: number) {
 }
 
 function characterMeta(stage: number) {
-  const names = ["Bebek", "Çocuk", "Genç", "Öğrenci", "Usta"];
-  const emojis = ["👶", "🧒", "🧑", "🎓", "⭐"];
+  const names = ["Çırak", "Kalfa", "Usta adayı", "Ders Ustası", "Büyük Usta"];
+  const emojis = ["📘", "📗", "🎯", "🏆", "👑"];
   const s = Math.min(4, Math.max(0, stage));
   return { stage: s, name: names[s], emoji: emojis[s] };
+}
+
+function trackLabel(track: string, grade: number) {
+  if (grade <= 10) return "LGS";
+  const m: Record<string, string> = {
+    sayisal: "Sayısal",
+    sozel: "Sözel",
+    esit: "Eşit ağırlık",
+    dil: "Dil",
+    tyt: "TYT",
+    lgs: "LGS",
+  };
+  return m[String(track || "").toLowerCase()] || track || "—";
+}
+
+async function buildWeekOverview(
+  supabase: SupabaseClient,
+  studentId: string,
+  itemRows: { id: string; topic_snapshot?: string; subjects?: { title?: string } | null }[],
+  monday: Date,
+) {
+  const { data: stu } = await supabase
+    .from("students")
+    .select("id, title, grade, track, xp, character_stage")
+    .eq("id", studentId)
+    .maybeSingle();
+  const xp = Number(stu?.xp) || 0;
+  const character = characterMeta(Number(stu?.character_stage) || characterStageFromXp(xp));
+  const itemIds = itemRows.map((r) => String(r.id));
+  const sun = new Date(monday);
+  sun.setDate(sun.getDate() + 6);
+  const from = isoDate(monday);
+  const to = isoDate(sun);
+  let logs: Record<string, unknown>[] = [];
+  if (itemIds.length) {
+    const { data, error } = await supabase
+      .from("study_logs")
+      .select("*")
+      .eq("student_id", studentId)
+      .in("plan_item_id", itemIds)
+      .gte("work_date", from)
+      .lte("work_date", to);
+    if (error) throw error;
+    logs = data || [];
+  }
+  const logByItem: Record<string, Record<string, unknown>> = {};
+  for (const lg of logs) logByItem[String(lg.plan_item_id)] = lg;
+
+  let completed = 0;
+  const moodTopics: Record<string, { subject: string; topic: string; note: string }[]> = {
+    iyi: [],
+    orta: [],
+    kotu: [],
+  };
+  for (const it of itemRows) {
+    const lg = logByItem[String(it.id)];
+    const subj = (it.subjects as { title?: string } | null)?.title || "Ders";
+    const topic = String(it.topic_snapshot || "");
+    if (!lg) continue;
+    if (lg.kanban_status === "done") completed++;
+    const mood = String(lg.mood || "");
+    if (mood === "iyi" || mood === "orta" || mood === "kotu") {
+      moodTopics[mood].push({
+        subject: subj,
+        topic,
+        note: String(lg.student_note || ""),
+      });
+    }
+  }
+  const total = itemRows.length;
+  return {
+    student: {
+      id: stu?.id,
+      title: stu?.title,
+      grade: stu?.grade,
+      track: stu?.track,
+      trackLabel: trackLabel(String(stu?.track || ""), Number(stu?.grade)),
+      xp,
+      character,
+    },
+    stats: {
+      totalItems: total,
+      completed,
+      pending: Math.max(0, total - completed),
+      moodGood: moodTopics.iyi.length,
+      moodMid: moodTopics.orta.length,
+      moodBad: moodTopics.kotu.length,
+    },
+    moodTopics,
+    logByItem,
+  };
 }
 
 function sb(): SupabaseClient {
@@ -633,7 +724,11 @@ Deno.serve(async (req) => {
           .eq("week_start", ws)
           .maybeSingle();
         if (e1) throw e1;
-        if (!plan) return json({ plan: null, items: [] });
+        const monday = startOfWeekMonday(weekStart);
+        if (!plan) {
+          const overview = await buildWeekOverview(supabase, studentId, [], monday);
+          return json({ plan: null, items: [], overview });
+        }
         const { data: items, error: e2 } = await supabase
           .from("plan_items")
           .select(
@@ -643,8 +738,10 @@ Deno.serve(async (req) => {
           .order("day_of_week", { ascending: true })
           .order("slot_order", { ascending: true });
         if (e2) throw e2;
+        const overview = await buildWeekOverview(supabase, studentId, items || [], monday);
         const mapped = (items || []).map((it: Record<string, unknown>) => {
           const sub = it.subjects as { id: string; title: string } | null | undefined;
+          const lg = overview.logByItem[String(it.id)];
           return {
             _id: it.id,
             dayOfWeek: it.day_of_week,
@@ -656,9 +753,20 @@ Deno.serve(async (req) => {
             teacherNote: it.teacher_note,
             importance: it.importance,
             hasTest: it.has_test,
-            subject: sub ? { _id: sub.id, title: sub.title } : null,
+            subject: sub ? { _id: sub.id, title: sub.title, color: sub.color } : null,
+            studentLog: lg
+              ? {
+                kanbanStatus: lg.kanban_status,
+                mood: lg.mood,
+                studentNote: lg.student_note,
+                correct: lg.correct,
+                wrong: lg.wrong,
+                blank: lg.blank,
+              }
+              : null,
           };
         });
+        const { logByItem: _omit, ...overviewPublic } = overview;
         return json({
           plan: {
             _id: plan.id,
@@ -667,6 +775,7 @@ Deno.serve(async (req) => {
             weekStart: plan.week_start,
           },
           items: mapped,
+          overview: overviewPublic,
         });
       }
       case "staffweeklysave": {

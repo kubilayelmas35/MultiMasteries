@@ -4,7 +4,6 @@ node_modules/
 deploy_payload.json
 deploy_mcp_args_one_line.txt
 deploy_edge.json
-docs/config.js
 supabase/migrations/_seed_part*.sql
 supabase/migrations/_mcp_chunks/
 supabase/migrations/_topic_chunks/

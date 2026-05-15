@@ -15,7 +15,7 @@
       --accent2: #22c55e;
       --danger: #f87171;
       --border: #2a3548;
-      --day-header: #b91c1c;
+      --day-header: #1d4ed8;
       --day-header-text: #fff;
       --cell-empty: #1e293b;
     }
@@ -29,7 +29,7 @@
       --accent2: #16a34a;
       --danger: #dc2626;
       --border: #cbd5e1;
-      --day-header: #c00000;
+      --day-header: #2563eb;
       --day-header-text: #ffffff;
       --cell-empty: #f1f5f9;
     }
@@ -73,7 +73,7 @@
     table.week-grid { width: 100%; min-width: 900px; border-collapse: collapse; table-layout: fixed; }
     table.week-grid th {
       background: var(--day-header); color: var(--day-header-text);
-      padding: 10px 6px; font-size: 0.8rem; font-weight: 700; border: 1px solid #991b1b;
+      padding: 10px 6px; font-size: 0.8rem; font-weight: 700; border: 1px solid #1e40af;
     }
     table.week-grid th.today { outline: 3px solid var(--accent); outline-offset: -2px; }
     table.week-grid td {
@@ -110,6 +110,45 @@
     .modal-overlay.open { display: flex; }
     .modal-box { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 18px; max-width: 420px; width: 100%; }
     .modal-box h3 { margin: 0 0 12px; font-size: 1rem; }
+
+    .auth-shell { max-width: 520px; margin: 0 auto 16px; }
+    .auth-hero {
+      text-align: center; padding: 20px 16px; margin-bottom: 12px; border-radius: 16px;
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 55%, #3b82f6 100%);
+      color: #fff; border: 1px solid #1d4ed8;
+    }
+    .auth-hero h2 { margin: 0 0 6px; font-size: 1.15rem; font-weight: 700; }
+    .auth-hero p { margin: 0; font-size: 0.88rem; opacity: 0.92; }
+    .auth-card { box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+    .welcome-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+    .welcome-row button { width: auto; min-width: 88px; }
+    .stf-overview {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px; margin: 12px 0; padding: 12px; border-radius: 12px;
+      background: var(--input-bg); border: 1px solid var(--border);
+    }
+    .stf-overview .stat { font-size: 0.85rem; }
+    .stf-overview .stat strong { display: block; font-size: 1.1rem; color: var(--text); }
+    .mood-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
+    @media (max-width: 800px) { .mood-grid { grid-template-columns: 1fr; } }
+    .mood-col { border-radius: 10px; padding: 10px; font-size: 0.82rem; border: 1px solid var(--border); }
+    .mood-col h4 { margin: 0 0 8px; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em; }
+    .mood-col ul { margin: 0; padding-left: 16px; }
+    .mood-col li { margin-bottom: 6px; }
+    .mood-good { background: rgba(34,197,94,0.12); border-color: #22c55e; }
+    .mood-mid { background: rgba(234,179,8,0.12); border-color: #eab308; }
+    .mood-bad { background: rgba(248,113,113,0.12); border-color: #f87171; }
+    .stu-feedback { margin-top: 8px; padding: 8px; border-radius: 8px; background: rgba(0,0,0,0.15); font-size: 0.75rem; }
+    [data-theme="light"] .stu-feedback { background: rgba(0,0,0,0.04); }
+    .fb-status { display: inline-block; padding: 2px 8px; border-radius: 6px; font-weight: 700; margin-right: 6px; }
+    .fb-status.done { background: var(--accent2); color: #fff; }
+    .fb-status.pending { background: var(--border); color: var(--muted); }
+    .fb-mood { display: inline-block; padding: 2px 8px; border-radius: 6px; font-weight: 600; }
+    .fb-mood.mood-iyi { background: #22c55e; color: #fff; }
+    .fb-mood.mood-orta { background: #eab308; color: #1a1a1a; }
+    .fb-mood.mood-kotu { background: #ef4444; color: #fff; }
+    .fb-note { margin: 6px 0 0; font-style: italic; }
+    .char-tag { font-size: 0.75rem; color: var(--muted); }
   </style>
 </head>
 <body>
@@ -127,7 +166,12 @@
 
     <!-- ÖĞRENCİ -->
     <div id="p-stu" class="panel on">
-      <div class="card" id="stu-reg-card">
+      <div id="stu-auth" class="auth-shell">
+      <div class="auth-hero">
+        <h2>Öğrenci paneli</h2>
+        <p>Haftalık planını takip et · Ders Ustası seviyene yüksel</p>
+      </div>
+      <div class="card auth-card" id="stu-reg-card">
         <h2 style="font-size:1rem;margin:0 0 8px;">Kayıt ol</h2>
         <p class="muted" style="margin:0 0 10px;">9–12. sınıf; 11–12 için bölüm seçin. Öğretmen sizi ekleyene kadar plan boş kalabilir.</p>
         <div style="margin-bottom:8px;"><label>Ad soyad</label><input id="reg-title" placeholder="Ayşe Yılmaz" /></div>
@@ -152,20 +196,24 @@
         <div class="toolbar"><button class="good" type="button" id="stu-reg-btn">Kayıt ol ve giriş</button></div>
         <div class="err" id="stu-reg-err"></div>
       </div>
-      <div class="card" id="stu-login-card">
+      <div class="card auth-card" id="stu-login-card">
+        <h2 style="font-size:1rem;margin:0 0 8px;">Giriş yap</h2>
         <div class="row">
-          <div><label>Öğrenci kodu</label><input id="stu-code" /></div>
-          <div><label>PIN</label><input id="stu-pin" type="password" /></div>
+          <div><label>Öğrenci kodu</label><input id="stu-code" autocomplete="username" /></div>
+          <div><label>PIN</label><input id="stu-pin" type="password" autocomplete="current-password" /></div>
         </div>
         <div class="toolbar">
-          <button class="primary" type="button" id="stu-login-btn">Giriş</button>
-          <button class="ghost" type="button" id="stu-logout-btn">Çıkış</button>
+          <button class="primary" type="button" id="stu-login-btn">Giriş yap</button>
         </div>
         <div class="err" id="stu-login-err"></div>
       </div>
-            <div id="stu-main" style="display:none;">
+      </div>
+      <div id="stu-main" style="display:none;">
         <div class="card">
-          <div class="muted" id="stu-welcome"></div>
+          <div class="welcome-row">
+            <div class="muted" id="stu-welcome"></div>
+            <button class="ghost" type="button" id="stu-logout-btn">Çıkış</button>
+          </div>
           <div id="stu-progress"></div>
         </div>
         <div class="card">
@@ -177,20 +225,29 @@
 
     <!-- ÖĞRETMEN -->
     <div id="p-stf" class="panel">
-      <div class="card" id="stf-login-card">
+      <div id="stf-auth" class="auth-shell">
+      <div class="auth-hero">
+        <h2>Öğretmen paneli</h2>
+        <p>Öğrenci planı · İlerleme ve geri bildirim takibi</p>
+      </div>
+      <div class="card auth-card" id="stf-login-card">
+        <h2 style="font-size:1rem;margin:0 0 8px;">Giriş yap</h2>
         <div class="row">
-          <div><label>Öğretmen kodu</label><input id="stf-code" /></div>
-          <div><label>PIN</label><input id="stf-pin" type="password" /></div>
+          <div><label>Öğretmen kodu</label><input id="stf-code" autocomplete="username" /></div>
+          <div><label>PIN</label><input id="stf-pin" type="password" autocomplete="current-password" /></div>
         </div>
         <div class="toolbar">
-          <button class="primary" type="button" id="stf-login-btn">Giriş</button>
-          <button class="ghost" type="button" id="stf-logout-btn">Çıkış</button>
+          <button class="primary" type="button" id="stf-login-btn">Giriş yap</button>
         </div>
         <div class="err" id="stf-login-err"></div>
       </div>
+      </div>
       <div id="stf-main" style="display:none;">
         <div class="card">
-          <div class="muted" id="stf-welcome"></div>
+          <div class="welcome-row">
+            <div class="muted" id="stf-welcome"></div>
+            <button class="ghost" type="button" id="stf-logout-btn">Çıkış</button>
+          </div>
           <div class="row" style="margin-top:10px;">
             <div><label>Öğrenci</label><select id="stf-student"></select></div>
             <div><label>Hafta (herhangi bir gün)</label><input type="date" id="stf-week" /></div>
@@ -203,6 +260,7 @@
             <button class="good" type="button" id="stf-publish">Yayınla (öğrenciye aç)</button>
           </div>
           <div class="err" id="stf-err"></div>
+          <div id="stf-student-panel" class="card" style="margin-top:12px;padding:0;border:none;background:transparent"></div>
           <div class="week-scroll"><table class="week-grid" id="stf-week-table"></table></div>
         </div>
       </div>

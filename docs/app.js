@@ -37,6 +37,9 @@
   let TOPIC_CACHE = {};
   let STU_WEEK_ITEMS = [];
   let MODAL_ITEM = null;
+  let STF_OVERVIEW = null;
+
+  const DEFAULT_CHAR = { emoji: '📘', name: 'Çırak' };
 
   function cellKey(dow, slot) { return dow + '-' + slot; }
   function emptyCell() {
@@ -111,6 +114,85 @@
     const a = ACTIVITIES.find((x) => x.v === v);
     return a ? a.l : v;
   }
+  function moodLabel(v) {
+    const m = MOODS.find((x) => x.v === v);
+    return m ? m.l : v;
+  }
+  function setStuAuthState(loggedIn, name) {
+    const auth = document.getElementById('stu-auth');
+    const main = document.getElementById('stu-main');
+    if (auth) auth.style.display = loggedIn ? 'none' : 'block';
+    if (main) main.style.display = loggedIn ? 'block' : 'none';
+    if (loggedIn && name) {
+      const w = document.getElementById('stu-welcome');
+      if (w) w.textContent = 'Hoş geldiniz, ' + name;
+    }
+  }
+  function setStfAuthState(loggedIn, name) {
+    const auth = document.getElementById('stf-auth');
+    const main = document.getElementById('stf-main');
+    if (auth) auth.style.display = loggedIn ? 'none' : 'block';
+    if (main) main.style.display = loggedIn ? 'block' : 'none';
+    if (loggedIn && name) {
+      const w = document.getElementById('stf-welcome');
+      if (w) w.textContent = 'Hoş geldiniz, ' + name;
+    }
+  }
+  function studentLogHtml(log) {
+    if (!log) return '';
+    const done = log.kanbanStatus === 'done';
+    let h = '<div class="stu-feedback">';
+    h += '<span class="fb-status ' + (done ? 'done' : 'pending') + '">' + (done ? '✓ Tamamladı' : '○ Bekliyor') + '</span>';
+    if (log.mood) h += '<span class="fb-mood mood-' + escapeHtml(log.mood) + '">' + escapeHtml(moodLabel(log.mood)) + '</span>';
+    if (log.studentNote) h += '<p class="fb-note">' + escapeHtml(log.studentNote) + '</p>';
+    const c = Number(log.correct) || 0;
+    const w = Number(log.wrong) || 0;
+    const b = Number(log.blank) || 0;
+    if (c || w || b) h += '<p class="fb-test muted">Test: ' + c + ' doğru · ' + w + ' yanlış · ' + b + ' boş</p>';
+    h += '</div>';
+    return h;
+  }
+  function renderStfStudentPanel(ov) {
+    const el = document.getElementById('stf-student-panel');
+    if (!el) return;
+    if (!ov || !ov.student) {
+      el.innerHTML = '<p class="muted">Öğrenci seçip planı yükleyin; ad, sınıf ve ilerleme burada görünür.</p>';
+      return;
+    }
+    const s = ov.student;
+    const st = ov.stats || {};
+    const pct = st.totalItems ? Math.round((st.completed / st.totalItems) * 100) : 0;
+    const ch = s.character || DEFAULT_CHAR;
+    const moodTitles = { iyi: 'İyi gitti', orta: 'Orta seviye', kotu: 'Zayıf — destek gerek' };
+    const moodCls = { iyi: 'mood-good', orta: 'mood-mid', kotu: 'mood-bad' };
+    let moodGrid = '<div class="mood-grid">';
+    ['iyi', 'orta', 'kotu'].forEach((m) => {
+      const list = (ov.moodTopics && ov.moodTopics[m]) || [];
+      moodGrid += '<div class="mood-col ' + moodCls[m] + '"><h4>' + moodTitles[m] + ' (' + list.length + ')</h4><ul>';
+      if (!list.length) moodGrid += '<li class="muted">—</li>';
+      else {
+        list.forEach((x) => {
+          moodGrid += '<li><strong>' + escapeHtml(x.subject) + '</strong>';
+          if (x.topic) moodGrid += ' · ' + escapeHtml(x.topic);
+          if (x.note) moodGrid += '<br/><span class="muted">' + escapeHtml(x.note) + '</span>';
+          moodGrid += '</li>';
+        });
+      }
+      moodGrid += '</ul></div>';
+    });
+    moodGrid += '</div>';
+    el.innerHTML =
+      '<h3 style="margin:0 0 10px;font-size:1rem;">' + escapeHtml(s.title || 'Öğrenci') + '</h3>' +
+      '<div class="stf-overview">' +
+      '<div class="stat"><span class="muted">Sınıf</span><strong>' + escapeHtml(String(s.grade || '—')) + '. sınıf</strong></div>' +
+      '<div class="stat"><span class="muted">Bölüm</span><strong>' + escapeHtml(s.trackLabel || '—') + '</strong></div>' +
+      '<div class="stat"><span class="muted">Tamamlanan</span><strong>' + (st.completed || 0) + ' / ' + (st.totalItems || 0) + '</strong></div>' +
+      '<div class="stat"><span class="muted">Haftalık ilerleme</span><strong>%' + pct + '</strong></div>' +
+      '<div class="stat"><span class="muted">Seviye</span><strong>' + (ch.emoji || '') + ' ' + escapeHtml(ch.name || '') + '</strong><br/><span class="char-tag">XP: ' + (s.xp || 0) + '</span></div>' +
+      '</div>' +
+      '<p class="muted" style="margin:8px 0 4px">Konu geri bildirimi (öğrenci değerlendirmesi)</p>' +
+      moodGrid;
+  }
   function trackOptionsHtml(grade, selected) {
     const tracks = grade <= 10
       ? [{ v: 'lgs', l: 'LGS' }]
@@ -181,6 +263,7 @@
           hasTest: !!it.hasTest,
           curriculumGrade: 11,
           curriculumTrack: 'sayisal',
+          studentLog: it.studentLog || null,
         };
       });
     }
@@ -241,7 +324,9 @@
       '<label>Konu (elle)</label><input class="wc-topic-manual" value="' + escapeHtml(cell.topicSnapshot || '') + '" data-dow="' + dow + '" data-slot="' + slot + '"/>' +
       '<label>Müfredattan</label><select class="wc-topic-cur" data-dow="' + dow + '" data-slot="' + slot + '"><option value="">Konu seç…</option></select>' +
       '<label>Not</label><input class="wc-note" value="' + escapeHtml(cell.teacherNote || '') + '" data-dow="' + dow + '" data-slot="' + slot + '"/>' +
-      '</div></div>'
+      '</div>' +
+      studentLogHtml(cell.studentLog) +
+      '</div>'
     );
   }
 
@@ -383,7 +468,18 @@
       o.textContent = s.label || s.studentId;
       sel.appendChild(o);
     });
-    sel.onchange = () => { SUBJECTS_CACHE = {}; TOPIC_CACHE = {}; };
+    sel.onchange = () => {
+      SUBJECTS_CACHE = {};
+      TOPIC_CACHE = {};
+      STF_OVERVIEW = null;
+      renderStfStudentPanel(null);
+      const w = document.getElementById('stf-week').value;
+      if (sel.value && w) {
+        stfLoadPlan().catch((e) => {
+          document.getElementById('stf-err').textContent = e.message;
+        });
+      }
+    };
   }
 
   async function stfLoadPlan() {
@@ -395,7 +491,9 @@
     const mon = mondayISOFromAnyDate(new Date(w + 'T12:00:00'));
     const data = await post('staffweeklyget', { staffToken: stfToken(), studentId: sid, weekStartIso: mon });
     document.getElementById('stf-title').value = (data.plan && data.plan.title) || 'Haftalık plan';
+    STF_OVERVIEW = data.overview || null;
     itemsToCells(data.items || []);
+    renderStfStudentPanel(STF_OVERVIEW);
     await stfRenderWeekGrid();
   }
 
@@ -426,8 +524,7 @@
           pin: document.getElementById('stf-pin').value,
         });
         stfSetToken(r.sessionToken);
-        document.getElementById('stf-welcome').textContent = 'Hoş geldiniz, ' + (r.displayName || '');
-        document.getElementById('stf-main').style.display = 'block';
+        setStfAuthState(true, r.displayName || '');
         await stfLoadStudents();
         await stfRenderWeekGrid();
       } catch (e) {
@@ -437,7 +534,9 @@
     document.getElementById('stf-logout-btn').onclick = async () => {
       try { await post('stafflogout', { staffToken: stfToken() }); } catch (e) {}
       stfSetToken('');
-      document.getElementById('stf-main').style.display = 'none';
+      setStfAuthState(false);
+      STF_OVERVIEW = null;
+      renderStfStudentPanel(null);
     };
     document.getElementById('stf-load').onclick = async () => {
       try { await stfLoadPlan(); } catch (e) { document.getElementById('stf-err').textContent = e.message; }
@@ -451,8 +550,10 @@
       catch (e) { document.getElementById('stf-err').textContent = e.message; }
     };
     if (stfToken()) {
-      document.getElementById('stf-main').style.display = 'block';
+      setStfAuthState(true);
       stfLoadStudents().then(() => stfRenderWeekGrid()).catch(() => {});
+    } else {
+      setStfAuthState(false);
     }
   }
 
@@ -467,8 +568,8 @@
     const pct = prog.progressPercent != null ? prog.progressPercent : 0;
     el.innerHTML =
       '<div class="char-row">' +
-      '<span class="char-emoji">' + (ch.emoji || '👶') + '</span>' +
-      '<div><strong>' + escapeHtml(ch.name || 'Bebek') + '</strong><br/><span class="muted">XP: ' + (prog.xp || 0) + '</span></div>' +
+      '<span class="char-emoji">' + (ch.emoji || DEFAULT_CHAR.emoji) + '</span>' +
+      '<div><strong>' + escapeHtml(ch.name || DEFAULT_CHAR.name) + '</strong><br/><span class="char-tag">Ders Ustası yolculuğu · XP: ' + (prog.xp || 0) + '</span></div>' +
       '</div>' +
       '<div class="xp-bar"><div class="xp-fill" style="width:' + pct + '%"></div></div>';
   }
@@ -516,7 +617,7 @@
     if (!data.progress) return null;
     const xp = data.progress.xp || 0;
     const stages = [50, 150, 300, 500];
-    const ch = data.progress.character || { emoji: '👶', name: 'Bebek' };
+    const ch = data.progress.character || DEFAULT_CHAR;
     let prev = 0, next = 50, stage = 0;
     for (let i = 0; i < stages.length; i++) {
       if (xp < stages[i]) { next = stages[i]; stage = i; break; }
@@ -577,8 +678,11 @@
 
   async function stuRefresh() {
     const tok = stuToken();
-    document.getElementById('stu-main').style.display = tok ? 'block' : 'none';
-    if (!tok) return;
+    if (!tok) {
+      setStuAuthState(false);
+      return;
+    }
+    setStuAuthState(true);
     const data = await post('studentweek', { sessionToken: tok });
     renderStuWeek(data);
     const prog = await post('studentprogress', { sessionToken: tok });
@@ -618,7 +722,7 @@
           schoolYear: document.getElementById('reg-year') ? document.getElementById('reg-year').value : '',
         });
         stuSetToken(r.sessionToken);
-        document.getElementById('stu-welcome').textContent = 'Hoş geldiniz, ' + (r.displayName || '');
+        setStuAuthState(true, r.displayName || '');
         await stuRefresh();
       } catch (e) { document.getElementById('stu-reg-err').textContent = e.message; }
     };
@@ -630,16 +734,21 @@
           pin: document.getElementById('stu-pin').value,
         });
         stuSetToken(r.sessionToken);
-        document.getElementById('stu-welcome').textContent = 'Hoş geldiniz, ' + (r.displayName || '');
+        setStuAuthState(true, r.displayName || '');
         await stuRefresh();
       } catch (e) { document.getElementById('stu-login-err').textContent = e.message; }
     };
     document.getElementById('stu-logout-btn').onclick = async () => {
       try { await post('studentlogout', { sessionToken: stuToken() }); } catch (e) {}
       stuSetToken('');
-      document.getElementById('stu-main').style.display = 'none';
+      setStuAuthState(false);
     };
-    if (stuToken()) stuRefresh().catch((e) => alert(e.message));
+    if (stuToken()) {
+      setStuAuthState(true);
+      stuRefresh().catch((e) => alert(e.message));
+    } else {
+      setStuAuthState(false);
+    }
   }
 
   function tabInit() {
