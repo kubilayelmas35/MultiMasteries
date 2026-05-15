@@ -1,0 +1,19 @@
+grade,track,Subject,title,sortOrder,defaultMinutes
+11,tyt,Türkçe,Paragraf TYT,10,40
+11,tyt,Türkçe,Dil bilgisi TYT,20,40
+11,tyt,Türkçe,Yazım ve noktalama,30,35
+11,tyt,Matematik,Temel kavramlar,10,45
+11,tyt,Matematik,Rasyonel sayılar,20,45
+11,tyt,Matematik,Üslü ve köklü ifadeler,30,45
+11,tyt,Matematik,Çarpanlara ayırma,40,45
+11,tyt,Matematik,Oran orantı,50,40
+11,tyt,Matematik,Kümeler,60,40
+11,tyt,Matematik,Fonksiyonlar TYT,70,50
+11,tyt,Matematik,Polinomlar,80,50
+11,tyt,Matematik,İkinci dereceden denklemler,90,50
+11,tyt,Fen Bilimleri,Fizik hareket ve kuvvet,10,45
+11,tyt,Fen Bilimleri,Fizik enerji,20,45
+11,tyt,Fen Bilimleri,Kimya atom modelleri,30,45
+11,tyt,Fen Bilimleri,Kimya periyodik sistem,40,45
+11,tyt,Fen Bilimleri,Biyoloji hücre,50,45
+11,tyt,Fen Bilimleri,Biyoloji canlıların sınıflandırılması,60,45

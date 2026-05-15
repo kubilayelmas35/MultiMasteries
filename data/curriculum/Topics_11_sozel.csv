@@ -1,0 +1,30 @@
+grade,track,Subject,title,sortOrder,defaultMinutes
+11,sozel,Türk Dili ve Edebiyatı,Güzel sanatlar ve edebiyat,10,50
+11,sozel,Türk Dili ve Edebiyatı,Şiir nazım biçimleri,20,50
+11,sozel,Türk Dili ve Edebiyatı,Divan edebiyatı temel,30,55
+11,sozel,Türk Dili ve Edebiyatı,Halk edebiyatı,40,50
+11,sozel,Türk Dili ve Edebiyatı,Tanzimat edebiyatı,50,50
+11,sozel,Türk Dili ve Edebiyatı,Servet-i Fünun ve Fecr-i Ati,60,50
+11,sozel,Türk Dili ve Edebiyatı,Milli edebiyat,70,50
+11,sozel,Tarih,Tarih ve zaman,10,45
+11,sozel,Tarih,İlk ve orta çağlarda Türk dünyası,20,45
+11,sozel,Tarih,İslamiyet öncesi Türk tarihi,30,45
+11,sozel,Tarih,İslamiyetin doğuşu ve ilk dönem,40,45
+11,sozel,Tarih,Yerleşme ve devletleşme sürecinde Selçuklu Türkiyesi,50,50
+11,sozel,Tarih,Beylikten devlete Osmanlı siyaseti,60,50
+11,sozel,Tarih,Dünya güç dengesi içinde Osmanlı,70,50
+11,sozel,Tarih,Devrimler çağında değişen devlet ve toplum,80,50
+11,sozel,Coğrafya,Doğal sistemler,10,45
+11,sozel,Coğrafya,Beşeri sistemler,20,45
+11,sozel,Coğrafya,Küresel ortam bölgeler ve ülkeler,30,45
+11,sozel,Coğrafya,Çevre ve toplum,40,45
+11,sozel,Coğrafya,Türkiye fiziki coğrafya genel,50,45
+11,sozel,Coğrafya,Türkiye beşeri coğrafya genel,60,45
+11,sozel,Felsefe,Felsefeyi tanıma,10,40
+11,sozel,Felsefe,Bilgi felsefesi,20,45
+11,sozel,Felsefe,Varlık felsefesi,30,45
+11,sozel,Felsefe,Ahlak felsefesi,40,45
+11,sozel,Felsefe,Siyaset felsefesi,50,45
+11,sozel,Türkçe,TYT paragraf,10,40
+11,sozel,Türkçe,Sözcük ve cümlede anlam,20,40
+11,sozel,Türkçe,Dil bilgisi TYT,30,40

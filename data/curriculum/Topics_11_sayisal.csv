@@ -1,0 +1,36 @@
+grade,track,Subject,title,sortOrder,defaultMinutes
+11,sayisal,Matematik,Trigonometri,10,55
+11,sayisal,Matematik,Logaritma,20,55
+11,sayisal,Matematik,Diziler,30,50
+11,sayisal,Matematik,Limit ve süreklilik,40,55
+11,sayisal,Matematik,Türev tanım ve kurallar,50,60
+11,sayisal,Matematik,Türevin uygulamaları,60,60
+11,sayisal,Matematik,Belirsiz integral,70,55
+11,sayisal,Matematik,Belirli integral ve uygulamaları,80,55
+11,sayisal,Geometri,Trigonometrik fonksiyonlar,10,50
+11,sayisal,Geometri,Doğrunun analitiği,20,50
+11,sayisal,Geometri,Çemberin analitiği,30,50
+11,sayisal,Geometri,Katı cisimler,40,50
+11,sayisal,Fizik,Vektörler,10,50
+11,sayisal,Fizik,Newton hareket yasaları,20,55
+11,sayisal,Fizik,İş güç enerji,30,50
+11,sayisal,Fizik,İtme ve momentum,40,50
+11,sayisal,Fizik,Elektrostatik,50,55
+11,sayisal,Fizik,Manyetizma ve elektromanyetik indüklenim temel,60,55
+11,sayisal,Kimya,Kimyasal hesaplamalar,10,50
+11,sayisal,Kimya,Gazlar,20,50
+11,sayisal,Kimya,Çözeltiler ve çözünürlük,30,50
+11,sayisal,Kimya,Asit baz dengesi,40,55
+11,sayisal,Kimya,Kimyasal tepkimelerde denge,50,55
+11,sayisal,Kimya,Organik kimya temel sınıflar,60,60
+11,sayisal,Biyoloji,Sinir sistemi,10,50
+11,sayisal,Biyoloji,Endokrin sistem,20,50
+11,sayisal,Biyoloji,Duyu organları,30,45
+11,sayisal,Biyoloji,Destek ve hareket,40,50
+11,sayisal,Biyoloji,Sindirim sistemi,50,50
+11,sayisal,Biyoloji,Solunum sistemi,60,50
+11,sayisal,Biyoloji,Dolaşım sistemi,70,50
+11,sayisal,Biyoloji,Üriner sistem,80,45
+11,sayisal,Türkçe,TYT paragraf stratejileri,10,40
+11,sayisal,Türkçe,Anlam bilgisi çıkarım,20,40
+11,sayisal,Türkçe,Dil bilgisi cümle ögeleri,30,40

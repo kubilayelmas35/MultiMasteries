@@ -1,0 +1,39 @@
+grade,track,Subject,title,sortOrder,defaultMinutes
+9,lgs,Türkçe,Sözcükte anlam,10,45
+9,lgs,Türkçe,Cümlede anlam,20,45
+9,lgs,Türkçe,Paragraf temel stratejiler,30,45
+9,lgs,Türkçe,Deyimler ve atasözleri,40,40
+9,lgs,Türkçe,Yazım kuralları (temel),50,40
+9,lgs,Türkçe,Noktalama işaretleri,60,40
+9,lgs,Matematik,Doğal sayılar ve tam sayılar,10,45
+9,lgs,Matematik,Rasyonel sayılar,20,45
+9,lgs,Matematik,Üslü ifadeler,30,45
+9,lgs,Matematik,Köklü ifadeler,40,45
+9,lgs,Matematik,Oran orantı ve yüzde,50,45
+9,lgs,Matematik,Cebirsel ifadeler ve özdeşlikler,60,50
+9,lgs,Matematik,Doğrusal denklemler,70,50
+9,lgs,Matematik,Üçgenler,80,50
+9,lgs,Matematik,Çember ve daire,90,50
+9,lgs,Matematik,Veri analizi (temel),100,40
+9,lgs,Fen Bilimleri,Mevsimler ve iklim,10,45
+9,lgs,Fen Bilimleri,DNA ve genetik kod,20,45
+9,lgs,Fen Bilimleri,Basıt makineler,30,45
+9,lgs,Fen Bilimleri,Kuvvet ve hareket,40,45
+9,lgs,Fen Bilimleri,Madde ve ısı,50,45
+9,lgs,Fen Bilimleri,Basınç,60,45
+9,lgs,Fen Bilimleri,Elektrik yükleri ve elektriklenme,70,45
+9,lgs,Fen Bilimleri,Ses ve özellikleri,80,40
+9,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Tarih ve zaman,10,40
+9,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,İnsanın üretimleri ile uygarlık,20,40
+9,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,İlk Türk devletleri,30,45
+9,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Yerleşme ve devletleşme sürecinde Selçuklu Türkiyesi,40,45
+9,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Beylikten devlete Osmanlı siyaseti,50,45
+9,lgs,Din Kültürü ve Ahlak Bilgisi,İnanç esasları,10,40
+9,lgs,Din Kültürü ve Ahlak Bilgisi,İbadet,20,40
+9,lgs,Din Kültürü ve Ahlak Bilgisi,Hz. Muhammed ve örnek ahlakı,30,40
+9,lgs,Din Kültürü ve Ahlak Bilgisi,Ahlaki tutum ve davranışlar,40,40
+9,lgs,İngilizce,Greetings and introductions,10,40
+9,lgs,İngilizce,Daily routines,20,40
+9,lgs,İngilizce,Simple present ve present continuous,30,40
+9,lgs,İngilizce,Countable ve uncountable nouns,40,40
+9,lgs,İngilizce,Past simple (temel),50,40

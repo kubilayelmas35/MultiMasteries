@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ders / çalışma programı</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --card: #1a2332;
+      --muted: #8b9bb4;
+      --text: #e8eef7;
+      --accent: #5b8cff;
+      --accent2: #22c55e;
+      --danger: #f87171;
+      --border: #2a3548;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--text);
+      min-height: 100vh;
+    }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 16px; }
+    h1 { font-size: 1.25rem; margin: 0 0 12px; font-weight: 650; }
+    .tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .tab {
+      padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border);
+      background: var(--card); color: var(--text); cursor: pointer; font-weight: 600;
+    }
+    .tab.on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+    .panel { display: none; }
+    .panel.on { display: block; }
+    .card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+      padding: 14px; margin-bottom: 12px;
+    }
+    label { display: block; font-size: 0.78rem; color: var(--muted); margin-bottom: 4px; }
+    input, select, textarea, button {
+      width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border);
+      background: #121a28; color: var(--text); font-size: 0.95rem;
+    }
+    textarea { min-height: 64px; resize: vertical; }
+    button.primary { background: var(--accent); border-color: #4a78e6; font-weight: 700; cursor: pointer; }
+    button.ghost { background: transparent; cursor: pointer; }
+    button.good { background: var(--accent2); border-color: #16a34a; cursor: pointer; }
+    button.bad { background: #334155; cursor: pointer; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media (max-width: 640px) { .row { grid-template-columns: 1fr; } }
+    .err { color: var(--danger); font-size: 0.85rem; margin-top: 6px; white-space: pre-wrap; }
+    .muted { color: var(--muted); font-size: 0.85rem; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    th, td { border: 1px solid var(--border); padding: 6px; vertical-align: top; }
+    th { background: #121a28; color: var(--muted); font-weight: 600; }
+    .small { width: 100%; font-size: 0.8rem; padding: 6px; }
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
+    .toolbar button { width: auto; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Ders programı paneli</h1>
+    <p class="muted">Supabase Edge Function + Postgres. Statik hosting veya GitHub Pages (<code>docs/</code>) ile yayınlayın; anahtarı aşağıdaki sabitlere yazın.</p>
+
+    <div class="tabs">
+      <button type="button" class="tab on" data-tab="stu">Öğrenci</button>
+      <button type="button" class="tab" data-tab="stf">Öğretmen</button>
+    </div>
+
+    <div id="p-stu" class="panel on">
+      <div class="card" id="stu-reg-card">
+        <h2 style="font-size:1rem;margin:0 0 8px;">Kayıt ol</h2>
+        <p class="muted" style="margin:0 0 10px;">Hesabınızı oluşturun; öğretmeniniz sizi listesine ekleyene kadar plan boş olabilir.</p>
+        <div style="margin-bottom:8px;">
+          <label>Ad soyad</label>
+          <input id="reg-title" placeholder="Ayşe Yılmaz" />
+        </div>
+        <div class="row">
+          <div>
+            <label>Giriş kodu (benzersiz, harf ve rakam)</label>
+            <input id="reg-code" placeholder="AYS2026" autocomplete="off" />
+          </div>
+          <div>
+            <label>PIN (en az 4 karakter)</label>
+            <input id="reg-pin" type="password" autocomplete="new-password" />
+          </div>
+        </div>
+        <div class="row" style="margin-top:8px;">
+          <div>
+            <label>Sınıf (9–12)</label>
+            <input id="reg-grade" type="number" min="9" max="12" value="11" />
+          </div>
+          <div id="reg-track-wrap">
+            <label>Bölüm (11–12)</label>
+            <select id="reg-track">
+              <option value="sayisal">Sayısal</option>
+              <option value="sozel">Sözel</option>
+              <option value="esit">Eşit ağırlık</option>
+              <option value="dil">Dil</option>
+              <option value="tyt">TYT ağırlıklı</option>
+            </select>
+          </div>
+        </div>
+        <p class="muted" id="reg-track-hint" style="display:none;margin:6px 0 0;">9 ve 10. sınıf için müfredat LGS; bölüm seçilmez.</p>
+        <div style="margin-top:8px;">
+          <label>Eğitim yılı (isteğe bağlı)</label>
+          <input id="reg-year" placeholder="2025-2026" />
+        </div>
+        <div class="toolbar">
+          <button class="good" type="button" id="stu-reg-btn">Hesap oluştur ve giriş yap</button>
+        </div>
+        <div class="err" id="stu-reg-err"></div>
+      </div>
+      <div class="card" id="stu-login-card">
+        <h2 style="font-size:1rem;margin:0 0 8px;">Giriş</h2>
+        <div class="row">
+          <div>
+            <label>Öğrenci kodu</label>
+            <input id="stu-code" autocomplete="username" />
+          </div>
+          <div>
+            <label>PIN</label>
+            <input id="stu-pin" type="password" autocomplete="current-password" />
+          </div>
+        </div>
+        <div class="toolbar">
+          <button class="primary" type="button" id="stu-login-btn">Giriş</button>
+          <button class="ghost" type="button" id="stu-logout-btn">Çıkış</button>
+        </div>
+        <div class="err" id="stu-login-err"></div>
+      </div>
+      <div class="card" id="stu-main" style="display:none;">
+        <div class="muted" id="stu-welcome"></div>
+        <h2 style="font-size:1rem;margin:12px 0 8px;">Bugün</h2>
+        <div id="stu-list"></div>
+      </div>
+    </div>
+
+    <div id="p-stf" class="panel">
+      <div class="card" id="stf-login-card">
+        <div class="row">
+          <div>
+            <label>Öğretmen kodu</label>
+            <input id="stf-code" />
+          </div>
+          <div>
+            <label>PIN</label>
+            <input id="stf-pin" type="password" />
+          </div>
+        </div>
+        <div class="toolbar">
+          <button class="primary" type="button" id="stf-login-btn">Giriş</button>
+          <button class="ghost" type="button" id="stf-logout-btn">Çıkış</button>
+        </div>
+        <div class="err" id="stf-login-err"></div>
+      </div>
+      <div class="card" id="stf-main" style="display:none;">
+        <div class="muted" id="stf-welcome"></div>
+        <div class="row" style="margin-top:10px;">
+          <div>
+            <label>Öğrenci</label>
+            <select id="stf-student"></select>
+          </div>
+          <div>
+            <label>Hafta (herhangi bir gün)</label>
+            <input type="date" id="stf-week" />
+          </div>
+        </div>
+        <div style="margin-top:10px;">
+          <label>Plan başlığı</label>
+          <input id="stf-title" placeholder="Haftalık plan" />
+        </div>
+        <div class="toolbar">
+          <button class="primary" type="button" id="stf-load">Planı yükle</button>
+          <button class="good" type="button" id="stf-addrow">Satır ekle</button>
+          <button class="primary" type="button" id="stf-save-draft">Taslak kaydet</button>
+          <button class="good" type="button" id="stf-publish">Yayınla</button>
+        </div>
+        <div class="err" id="stf-err"></div>
+        <div style="overflow:auto;margin-top:10px;">
+          <table id="stf-table">
+            <thead>
+              <tr>
+                <th>Gün (1–7)</th>
+                <th>Sıra</th>
+                <th>Dk</th>
+                <th>Ders</th>
+                <th>Konu</th>
+                <th>Not</th>
+                <th>Test</th>
+              </tr>
+            </thead>
+            <tbody id="stf-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /** ========= Supabase proje ayarları ========= */
+    const SUPABASE_URL = 'https://greqjbcfphmvjpfumkcy.supabase.co';
+    /** Project Settings → API → anon public */
+    const SUPABASE_ANON_KEY = 'BURAYA_ANON_KEY';
+    const API_URL = SUPABASE_URL.replace(/\/$/, '') + '/functions/v1/ders-api';
+    /** ========================================= */
+
+    const LS_STU = 'dp_student_token';
+    const LS_STF = 'dp_staff_token';
+
+    async function post(name, body) {
+      const payload = Object.assign({ action: name }, body || {});
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + SUPABASE_ANON_KEY,
+          apikey: SUPABASE_ANON_KEY,
+        },
+        body: JSON.stringify(payload),
+      });
+      let data = {};
+      try { data = await res.json(); } catch (e) {}
+      if (!res.ok) throw new Error(data.error || ('HTTP ' + res.status));
+      return data;
+    }
+
+    function mondayISOFromAnyDate(d) {
+      const x = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12, 0, 0);
+      const js = x.getDay();
+      const dow = js === 0 ? 7 : js;
+      x.setDate(x.getDate() - (dow - 1));
+      x.setHours(0, 0, 0, 0);
+      return x.toISOString();
+    }
+
+    function tabInit() {
+      document.querySelectorAll('.tab').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.tab').forEach((b) => b.classList.remove('on'));
+          btn.classList.add('on');
+          const t = btn.getAttribute('data-tab');
+          document.querySelectorAll('.panel').forEach((p) => p.classList.remove('on'));
+          document.getElementById(t === 'stu' ? 'p-stu' : 'p-stf').classList.add('on');
+        });
+      });
+    }
+
+    /* ---- Öğrenci ---- */
+    function stuToken() { return localStorage.getItem(LS_STU) || ''; }
+    function stuSetToken(t) { if (t) localStorage.setItem(LS_STU, t); else localStorage.removeItem(LS_STU); }
+
+    async function stuRefresh() {
+      const tok = stuToken();
+      document.getElementById('stu-main').style.display = tok ? 'block' : 'none';
+      if (!tok) return;
+      const data = await post('studenttoday', { sessionToken: tok });
+      document.getElementById('stu-welcome').textContent = 'Bugünkü görevler';
+      const root = document.getElementById('stu-list');
+      root.innerHTML = '';
+      const items = data.todayItems || [];
+      if (!items.length) {
+        root.innerHTML = '<p class="muted">Bu hafta için yayınlanmış görev yok.</p>';
+        return;
+      }
+      items.forEach((it) => {
+        const sub = (it.subject && it.subject.title) ? it.subject.title : '';
+        const card = document.createElement('div');
+        card.className = 'card';
+        const pid = it._id;
+        card.innerHTML =
+          '<div style="font-weight:700;margin-bottom:8px;">' + escapeHtml(sub) + ' — ' + escapeHtml(it.topicSnapshot || '') + '</div>' +
+          '<div class="muted" style="margin-bottom:10px;">' + (it.durationMinutes || '-') + ' dk</div>' +
+          '<div class="row">' +
+          '  <div><label>Kanban</label><select class="stu-kan" data-pid="' + pid + '">' +
+          '    <option value="todo">Yapılacak</option><option value="doing">Yapıyorum</option><option value="done">Bitti</option><option value="stuck">Takıldım</option></select></div>' +
+          '  <div><label>Ruh hali</label><select class="stu-mod" data-pid="' + pid + '">' +
+          '    <option value="">—</option><option value="iyi">İyi</option><option value="kararsiz">Kararsızım</option><option value="zor">Zordu</option></select></div>' +
+          '</div>' +
+          '<div class="row" style="margin-top:8px;">' +
+          '  <div><label>Doğru</label><input type="number" class="stu-d" data-pid="' + pid + '" min="0" value="0"/></div>' +
+          '  <div><label>Yanlış</label><input type="number" class="stu-y" data-pid="' + pid + '" min="0" value="0"/></div>' +
+          '</div>' +
+          '<div class="row" style="margin-top:8px;">' +
+          '  <div><label>Boş</label><input type="number" class="stu-b" data-pid="' + pid + '" min="0" value="0"/></div>' +
+          '  <div><label>Test süresi (dk)</label><input type="number" class="stu-ts" data-pid="' + pid + '" min="0" value="0"/></div>' +
+          '</div>' +
+          '<div style="margin-top:8px;"><label>Not</label><textarea class="stu-note" data-pid="' + pid + '"></textarea></div>' +
+          '<div class="toolbar"><button type="button" class="primary stu-save" data-pid="' + pid + '">Kaydet</button><span class="muted stu-msg" data-pid="' + pid + '"></span></div>';
+        root.appendChild(card);
+      });
+
+      root.querySelectorAll('.stu-save').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const pid = btn.getAttribute('data-pid');
+          const kan = root.querySelector('.stu-kan[data-pid="' + pid + '"]').value;
+          const mod = root.querySelector('.stu-mod[data-pid="' + pid + '"]').value;
+          const d = Number(root.querySelector('.stu-d[data-pid="' + pid + '"]').value || 0);
+          const y = Number(root.querySelector('.stu-y[data-pid="' + pid + '"]').value || 0);
+          const b = Number(root.querySelector('.stu-b[data-pid="' + pid + '"]').value || 0);
+          const ts = Number(root.querySelector('.stu-ts[data-pid="' + pid + '"]').value || 0);
+          const note = root.querySelector('.stu-note[data-pid="' + pid + '"]').value || '';
+          try {
+            await post('studentsavelog', {
+              sessionToken: stuToken(),
+              planItemId: pid,
+              kanbanStatus: kan,
+              mood: mod,
+              studentNote: note,
+              correct: d,
+              wrong: y,
+              blank: b,
+              testDurationMinutes: ts,
+            });
+            const msg = root.querySelector('.stu-msg[data-pid="' + pid + '"]');
+            msg.textContent = 'Kaydedildi';
+          } catch (e) {
+            alert(e.message);
+          }
+        });
+      });
+    }
+
+    function escapeHtml(s) {
+      return String(s || '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+    function attrSafe(s) {
+      return String(s || '').replace(/"/g, '&quot;');
+    }
+
+    function stuInit() {
+      function updateRegTrackUi() {
+        const g = Number(document.getElementById('reg-grade').value);
+        const wrap = document.getElementById('reg-track-wrap');
+        const hint = document.getElementById('reg-track-hint');
+        const showTrack = g >= 11 && g <= 12;
+        if (wrap) wrap.style.display = showTrack ? '' : 'none';
+        if (hint) hint.style.display = showTrack ? 'none' : 'block';
+      }
+      const regGrade = document.getElementById('reg-grade');
+      regGrade.addEventListener('input', updateRegTrackUi);
+      regGrade.addEventListener('change', updateRegTrackUi);
+      updateRegTrackUi();
+
+      document.getElementById('stu-reg-btn').onclick = async () => {
+        document.getElementById('stu-reg-err').textContent = '';
+        try {
+          const g = Number(document.getElementById('reg-grade').value);
+          if (!Number.isFinite(g) || g < 9 || g > 12) {
+            document.getElementById('stu-reg-err').textContent = 'Sınıf 9–12 arası girin';
+            return;
+          }
+          const track = g <= 10 ? 'lgs' : document.getElementById('reg-track').value;
+          const r = await post('studentregister', {
+            title: document.getElementById('reg-title').value,
+            loginCode: document.getElementById('reg-code').value,
+            pin: document.getElementById('reg-pin').value,
+            grade: document.getElementById('reg-grade').value,
+            track,
+            schoolYear: document.getElementById('reg-year').value,
+          });
+          stuSetToken(r.sessionToken);
+          await stuRefresh();
+          document.getElementById('stu-welcome').textContent =
+            'Hoş geldiniz, ' + (r.displayName || '') + '. Öğretmeniniz sizi listesine ekleyene kadar plan boş olabilir.';
+        } catch (e) {
+          document.getElementById('stu-reg-err').textContent = e.message;
+        }
+      };
+
+      if (stuToken()) stuRefresh().catch((e) => alert(e.message));
+      document.getElementById('stu-login-btn').onclick = async () => {
+        document.getElementById('stu-login-err').textContent = '';
+        try {
+          const r = await post('studentlogin', {
+            loginCode: document.getElementById('stu-code').value,
+            pin: document.getElementById('stu-pin').value,
+          });
+          stuSetToken(r.sessionToken);
+          await stuRefresh();
+        } catch (e) {
+          document.getElementById('stu-login-err').textContent = e.message;
+        }
+      };
+      document.getElementById('stu-logout-btn').onclick = async () => {
+        try { await post('studentlogout', { sessionToken: stuToken() }); } catch (e) {}
+        stuSetToken('');
+        document.getElementById('stu-main').style.display = 'none';
+      };
+    }
+
+    /* ---- Öğretmen ---- */
+    let STAFF_SUBJECTS = [];
+    let STF_ROWS = [];
+
+    function stfToken() { return localStorage.getItem(LS_STF) || ''; }
+    function stfSetToken(t) { if (t) localStorage.setItem(LS_STF, t); else localStorage.removeItem(LS_STF); }
+
+    function stfRenderTable() {
+      const tb = document.getElementById('stf-tbody');
+      tb.innerHTML = '';
+      STF_ROWS.forEach((row, idx) => {
+        const tr = document.createElement('tr');
+        const opts = STAFF_SUBJECTS.map((s) =>
+          '<option value="' + s._id + '"' + (row.subjectId === s._id ? ' selected' : '') + '>' + escapeHtml(s.title) + '</option>'
+        ).join('');
+        tr.innerHTML =
+          '<td><input class="small stf-dow" data-i="' + idx + '" type="number" min="1" max="7" value="' + (row.dayOfWeek || 1) + '"/></td>' +
+          '<td><input class="small stf-ord" data-i="' + idx + '" type="number" min="1" value="' + (row.slotOrder || idx + 1) + '"/></td>' +
+          '<td><input class="small stf-min" data-i="' + idx + '" type="number" min="1" value="' + (row.durationMinutes || 45) + '"/></td>' +
+          '<td><select class="small stf-sub" data-i="' + idx + '">' + opts + '</select></td>' +
+          '<td><input class="small stf-top" data-i="' + idx + '" value="' + attrSafe(row.topicSnapshot || '') + '"/></td>' +
+          '<td><input class="small stf-note" data-i="' + idx + '" value="' + attrSafe(row.teacherNote || '') + '"/></td>' +
+          '<td><input type="checkbox" class="stf-test" data-i="' + idx + '"' + (row.hasTest ? ' checked' : '') + '/></td>';
+        tb.appendChild(tr);
+      });
+      tb.querySelectorAll('.stf-dow').forEach((el) => el.oninput = () => { const i = +el.dataset.i; STF_ROWS[i].dayOfWeek = +el.value || 1; });
+      tb.querySelectorAll('.stf-ord').forEach((el) => el.oninput = () => { const i = +el.dataset.i; STF_ROWS[i].slotOrder = +el.value || 1; });
+      tb.querySelectorAll('.stf-min').forEach((el) => el.oninput = () => { const i = +el.dataset.i; STF_ROWS[i].durationMinutes = +el.value || 0; });
+      tb.querySelectorAll('.stf-sub').forEach((el) => el.onchange = () => { const i = +el.dataset.i; STF_ROWS[i].subjectId = el.value; });
+      tb.querySelectorAll('.stf-top').forEach((el) => el.oninput = () => { const i = +el.dataset.i; STF_ROWS[i].topicSnapshot = el.value; });
+      tb.querySelectorAll('.stf-note').forEach((el) => el.oninput = () => { const i = +el.dataset.i; STF_ROWS[i].teacherNote = el.value; });
+      tb.querySelectorAll('.stf-test').forEach((el) => el.onchange = () => { const i = +el.dataset.i; STF_ROWS[i].hasTest = el.checked; });
+    }
+
+    async function stfLoadStudents() {
+      const list = await post('staffstudents', { staffToken: stfToken() });
+      const sel = document.getElementById('stf-student');
+      sel.innerHTML = '';
+      list.forEach((s) => {
+        const o = document.createElement('option');
+        o.value = s.studentId;
+        o.textContent = s.label || s.studentId;
+        sel.appendChild(o);
+      });
+    }
+
+    async function stfLoadPlan() {
+      document.getElementById('stf-err').textContent = '';
+      const sid = document.getElementById('stf-student').value;
+      const w = document.getElementById('stf-week').value;
+      if (!sid || !w) throw new Error('Öğrenci ve tarih seçin');
+      const mon = mondayISOFromAnyDate(new Date(w + 'T12:00:00'));
+      const data = await post('staffweeklyget', { staffToken: stfToken(), studentId: sid, weekStartIso: mon });
+      document.getElementById('stf-title').value = (data.plan && data.plan.title) || '';
+      STF_ROWS = (data.items || []).map((it, idx) => ({
+        dayOfWeek: it.dayOfWeek,
+        slotOrder: it.slotOrder || idx + 1,
+        durationMinutes: it.durationMinutes,
+        subjectId: typeof it.subject === 'string' ? it.subject : (it.subject && it.subject._id),
+        topicSnapshot: it.topicSnapshot || '',
+        teacherNote: it.teacherNote || '',
+        hasTest: !!it.hasTest,
+      }));
+      stfRenderTable();
+    }
+
+    async function stfSave(status) {
+      document.getElementById('stf-err').textContent = '';
+      const sid = document.getElementById('stf-student').value;
+      const w = document.getElementById('stf-week').value;
+      const mon = mondayISOFromAnyDate(new Date(w + 'T12:00:00'));
+      const items = STF_ROWS.map((r, i) => ({
+        dayOfWeek: Number(r.dayOfWeek || 1),
+        slotOrder: Number(r.slotOrder || i + 1),
+        startTime: r.startTime || '',
+        durationMinutes: Number(r.durationMinutes || 45),
+        subjectId: r.subjectId,
+        topicSnapshot: r.topicSnapshot || '',
+        topicIdsSnapshot: r.topicIdsSnapshot || '',
+        teacherNote: r.teacherNote || '',
+        importance: r.importance || 'normal',
+        hasTest: !!r.hasTest,
+      }));
+      await post('staffweeklysave', {
+        staffToken: stfToken(),
+        studentId: sid,
+        weekStartIso: mon,
+        title: document.getElementById('stf-title').value || 'Haftalık plan',
+        status,
+        items,
+      });
+      await stfLoadPlan();
+    }
+
+    function stfInit() {
+      const today = new Date();
+      document.getElementById('stf-week').valueAsDate = today;
+
+      document.getElementById('stf-login-btn').onclick = async () => {
+        document.getElementById('stf-login-err').textContent = '';
+        try {
+          const r = await post('stafflogin', {
+            loginCode: document.getElementById('stf-code').value,
+            pin: document.getElementById('stf-pin').value,
+          });
+          stfSetToken(r.sessionToken);
+          document.getElementById('stf-welcome').textContent = 'Hoş geldiniz, ' + (r.displayName || '');
+          document.getElementById('stf-main').style.display = 'block';
+          STAFF_SUBJECTS = await post('staffsubjects', { staffToken: stfToken() });
+          await stfLoadStudents();
+        } catch (e) {
+          document.getElementById('stf-login-err').textContent = e.message;
+        }
+      };
+
+      document.getElementById('stf-logout-btn').onclick = async () => {
+        try { await post('stafflogout', { staffToken: stfToken() }); } catch (e) {}
+        stfSetToken('');
+        document.getElementById('stf-main').style.display = 'none';
+      };
+
+      document.getElementById('stf-load').onclick = async () => {
+        try { await stfLoadPlan(); } catch (e) { document.getElementById('stf-err').textContent = e.message; }
+      };
+      document.getElementById('stf-addrow').onclick = () => {
+        const sub0 = STAFF_SUBJECTS[0] && STAFF_SUBJECTS[0]._id;
+        STF_ROWS.push({
+          dayOfWeek: 1,
+          slotOrder: STF_ROWS.length + 1,
+          durationMinutes: 45,
+          subjectId: sub0,
+          topicSnapshot: '',
+          teacherNote: '',
+          hasTest: false,
+        });
+        stfRenderTable();
+      };
+      document.getElementById('stf-save-draft').onclick = async () => {
+        try { await stfSave('draft'); } catch (e) { document.getElementById('stf-err').textContent = e.message; }
+      };
+      document.getElementById('stf-publish').onclick = async () => {
+        try { await stfSave('published'); } catch (e) { document.getElementById('stf-err').textContent = e.message; }
+      };
+
+      if (stfToken()) {
+        document.getElementById('stf-main').style.display = 'block';
+        post('staffsubjects', { staffToken: stfToken() })
+          .then((subs) => { STAFF_SUBJECTS = subs; return stfLoadStudents(); })
+          .then(() => document.getElementById('stf-welcome').textContent = 'Oturum açık')
+          .catch(() => {});
+      }
+    }
+
+    tabInit();
+    stuInit();
+    stfInit();
+  </script>
+</body>
+</html>

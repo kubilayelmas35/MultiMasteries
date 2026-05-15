@@ -1,0 +1,24 @@
+grade,track,Subject,title,sortOrder,defaultMinutes
+12,sayisal,Matematik,İleri türev uygulamaları,10,55
+12,sayisal,Matematik,İntegral uygulamaları alan hacim,20,55
+12,sayisal,Matematik,Diferansiyel denklemler giriş,30,50
+12,sayisal,Matematik,Analitik düzlemde konikler,40,55
+12,sayisal,Matematik,Karmaşık sayılar,50,50
+12,sayisal,Matematik,Diziler ve seriler temel,60,50
+12,sayisal,Geometri,Çember analitiği ileri,10,50
+12,sayisal,Geometri,Konikler,20,55
+12,sayisal,Geometri,Katı cisimler ve yüzey alanları,30,50
+12,sayisal,Fizik,Alternatif akım,10,55
+12,sayisal,Fizik,Dalgalar,20,50
+12,sayisal,Fizik,Atom fiziğine giriş,30,50
+12,sayisal,Fizik,Modern fizik özel görelilik giriş,40,50
+12,sayisal,Kimya,Organik kimya reaksiyonlar,10,60
+12,sayisal,Kimya,Elektrokimya,20,55
+12,sayisal,Kimya,Kimyasal kinetik,30,50
+12,sayisal,Kimya,Kimyasal denge ileri,40,55
+12,sayisal,Biyoloji,Komünite ve popülasyon ekolojisi,10,50
+12,sayisal,Biyoloji,Güncel çevre sorunları,20,45
+12,sayisal,Biyoloji,Genetik mühendisliği ve biyoteknoloji,30,50
+12,sayisal,Türkçe,AYT dil bilgisi,10,40
+12,sayisal,Türkçe,Anlatım teknikleri,20,40
+12,sayisal,Türkçe,Metin türleri,30,40

@@ -1,0 +1,17 @@
+code,title,color,sortOrder
+S001,Türkçe,#5B8DEF,1
+S002,Matematik,#4472C4,2
+S003,Fen Bilimleri,#22C55E,3
+S004,T.C. İnkılap Tarihi ve Atatürkçülük,#A855F7,4
+S005,Din Kültürü ve Ahlak Bilgisi,#14B8A6,5
+S006,İngilizce,#F59E0B,6
+S007,Geometri,#3B82F6,7
+S008,Fizik,#7030A0,8
+S009,Kimya,#EAB308,9
+S010,Biyoloji,#70AD47,10
+S011,Türk Dili ve Edebiyatı,#EC4899,11
+S012,Tarih,#8B5CF6,12
+S013,Coğrafya,#06B6D4,13
+S014,Felsefe,#64748B,14
+S015,Türkçe ve Edebiyat,#5B8DEF,15
+S016,Dil ve Anlatım,#6366F1,16

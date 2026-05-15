@@ -1,0 +1,30 @@
+grade,track,Subject,title,sortOrder,defaultMinutes
+10,lgs,Türkçe,Anlatım bozuklukları,10,45
+10,lgs,Türkçe,Paragraf çıkarım,20,45
+10,lgs,Türkçe,Şiir temel kavramlar,30,40
+10,lgs,Türkçe,Dil bilgisi sözcük türleri,40,45
+10,lgs,Matematik,Fonksiyon kavramı,10,50
+10,lgs,Matematik,Doğrusal fonksiyonlar,20,50
+10,lgs,Matematik,Üçgenler ve benzerlik,30,50
+10,lgs,Matematik,Dönme ve geometrik cisimler,40,50
+10,lgs,Matematik,Olasılık temel,50,45
+10,lgs,Matematik,İstatistik grafik yorumlama,60,40
+10,lgs,Fen Bilimleri,Kimyasal tepkimeler,10,50
+10,lgs,Fen Bilimleri,Asitler ve bazlar,20,50
+10,lgs,Fen Bilimleri,Kuvvet ve enerji,30,50
+10,lgs,Fen Bilimleri,Basıt elektrik devreleri,40,45
+10,lgs,Fen Bilimleri,Üreme ve embriyo gelişimi,50,45
+10,lgs,Fen Bilimleri,Ekosistem ve enerji akışı,60,45
+10,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Osmanlı kültür ve medeniyeti,10,45
+10,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Osmanlıda demokratikleşme hareketleri,20,45
+10,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,I. Dünya Savaşı,30,45
+10,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Kurtuluş Savaşı hazırlık dönemi,40,45
+10,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Milli mücadele cepheleri,50,45
+10,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Atatürkçülük ve çağdaşlaşma,60,45
+10,lgs,Din Kültürü ve Ahlak Bilgisi,Kurana göre Hz. Muhammed,10,40
+10,lgs,Din Kültürü ve Ahlak Bilgisi,İslam düşüncesinde yorumlar,20,40
+10,lgs,Din Kültürü ve Ahlak Bilgisi,Ahlaki olgular,30,40
+10,lgs,İngilizce,Modal verbs temel,10,40
+10,lgs,İngilizce,If clauses type 1,20,40
+10,lgs,İngilizce,Passive voice giriş,30,40
+10,lgs,İngilizce,Reported speech giriş,40,40

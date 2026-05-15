@@ -1,0 +1,30 @@
+grade,track,Subject,title,sortOrder,defaultMinutes
+11,esit,Matematik,Fonksiyonlar,10,50
+11,esit,Matematik,Polinomlar,20,50
+11,esit,Matematik,İkinci dereceden denklemler,30,50
+11,esit,Matematik,Permütasyon ve kombinasyon,40,50
+11,esit,Matematik,Olasılık,50,45
+11,esit,Matematik,Logaritma temel,60,50
+11,esit,Matematik,Trigonometri temel,70,50
+11,esit,Matematik,Diziler,80,50
+11,esit,Matematik,Limit temel,90,50
+11,esit,Matematik,Türev temel,100,55
+11,esit,Türk Dili ve Edebiyatı,Edebi sanatlar,10,50
+11,esit,Türk Dili ve Edebiyatı,Şiir,20,50
+11,esit,Türk Dili ve Edebiyatı,Roman,30,50
+11,esit,Türk Dili ve Edebiyatı,Hikâye,40,45
+11,esit,Türk Dili ve Edebiyatı,Tiyatro,50,45
+11,esit,Türk Dili ve Edebiyatı,Deneme ve eleştiri,60,45
+11,esit,Tarih,Osmanlı kuruluş dönemi,10,45
+11,esit,Tarih,Osmanlı yükselme dönemi,20,45
+11,esit,Tarih,Osmanlı duraklama ve gerileme,30,45
+11,esit,Tarih,Osmanlı dağılış süreci,40,45
+11,esit,Tarih,20. yüzyıl başlarında Osmanlı,50,45
+11,esit,Tarih,Kurtuluş Savaşı,60,50
+11,esit,Coğrafya,Harita bilgisi,10,40
+11,esit,Coğrafya,İklim bilgisi,20,40
+11,esit,Coğrafya,Yer şekilleri,30,40
+11,esit,Coğrafya,Nüfus ve yerleşme,40,40
+11,esit,Coğrafya,Ekonomik faaliyetler,50,45
+11,esit,Türkçe,TYT paragraf,10,40
+11,esit,Türkçe,Dil bilgisi,20,40
