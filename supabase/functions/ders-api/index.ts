@@ -63,7 +63,7 @@ function characterMeta(stage: number) {
 }
 
 function trackLabel(track: string, grade: number) {
-  if (grade <= 10) return "LGS";
+  if (grade <= 10) return "Lise 9–10";
   const m: Record<string, string> = {
     sayisal: "Sayısal",
     sozel: "Sözel",
@@ -130,6 +130,13 @@ async function buildWeekOverview(
     }
   }
   const total = itemRows.length;
+  const { count: donePages, error: countErr } = await supabase
+    .from("study_logs")
+    .select("*", { count: "exact", head: true })
+    .eq("student_id", studentId)
+    .eq("kanban_status", "done");
+  if (countErr) throw countErr;
+  const bookPages = donePages ?? 0;
   return {
     student: {
       id: stu?.id,
@@ -139,6 +146,7 @@ async function buildWeekOverview(
       trackLabel: trackLabel(String(stu?.track || ""), Number(stu?.grade)),
       xp,
       character,
+      bookPages,
     },
     stats: {
       totalItems: total,
@@ -545,12 +553,25 @@ Deno.serve(async (req) => {
         const nextThreshold = [50, 150, 300, 500, 9999][stage] ?? 9999;
         const prevThreshold = [0, 50, 150, 300, 500][stage] ?? 0;
         const pct = Math.min(100, Math.round(((xp - prevThreshold) / (nextThreshold - prevThreshold)) * 100));
+        const { count: bp, error: cErr } = await supabase
+          .from("study_logs")
+          .select("*", { count: "exact", head: true })
+          .eq("student_id", studentId)
+          .eq("kanban_status", "done");
+        if (cErr) throw cErr;
+        const bookPages = bp ?? 0;
+        let bookGoal = 25;
+        while (bookGoal <= bookPages) bookGoal += 25;
+        const bookFillPct = Math.min(100, Math.round((bookPages / bookGoal) * 100));
         return json({
           xp,
           character: meta,
           progressPercent: pct,
           nextXp: nextThreshold,
           displayName: stu?.title || "Öğrenci",
+          bookPages,
+          bookGoal,
+          bookFillPct,
         });
       }
       case "stafflogin": {

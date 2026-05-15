@@ -39,9 +39,60 @@
   let MODAL_ITEM = null;
   let STF_OVERVIEW = null;
 
-  const DEFAULT_CHAR = { emoji: '📘', name: 'Çırak' };
+  function bookBarGoal(pages) {
+    const p = Number(pages) || 0;
+    let g = 25;
+    while (g <= p) g += 25;
+    return g;
+  }
 
-  function cellKey(dow, slot) { return dow + '-' + slot; }
+  function weekMondayLocal(anchor) {
+    const x = new Date(anchor.getFullYear(), anchor.getMonth(), anchor.getDate(), 12, 0, 0);
+    const js = x.getDay();
+    const dow = js === 0 ? 7 : js;
+    x.setDate(x.getDate() - (dow - 1));
+    return x;
+  }
+  function dayDateLabel(monday, dayDow) {
+    const d = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + (dayDow - 1), 12, 0, 0);
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    return dd + '.' + mm;
+  }
+  function confettiBurst() {
+    const layer = document.getElementById('confetti-layer');
+    if (!layer) return;
+    layer.innerHTML = '';
+    const colors = ['#f472b6', '#22c55e', '#38bdf8', '#fbbf24', '#a78bfa', '#fb7185', '#34d399'];
+    const w = window.innerWidth;
+    for (let i = 0; i < 64; i++) {
+      const el = document.createElement('div');
+      el.className = 'confetti-bit';
+      el.style.left = Math.random() * w + 'px';
+      el.style.background = colors[i % colors.length];
+      el.style.transform = 'rotate(' + (Math.random() * 360) + 'deg)';
+      const dur = 2 + Math.random() * 1.2;
+      el.style.animation = 'none';
+      layer.appendChild(el);
+      el.animate(
+        [
+          { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+          { transform: 'translateY(' + (window.innerHeight + 80) + 'px) rotate(' + (360 + Math.random() * 360) + 'deg)', opacity: 0.85 },
+        ],
+        { duration: dur * 1000, easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)', fill: 'forwards' },
+      );
+    }
+    setTimeout(() => { layer.innerHTML = ''; }, 3500);
+  }
+  function showStudentToast(msg) {
+    const t = document.getElementById('stu-toast');
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add('open');
+    clearTimeout(showStudentToast._tm);
+    showStudentToast._tm = setTimeout(() => { t.classList.remove('open'); }, 4200);
+  }
+
   function emptyCell() {
     return {
       subjectId: '',
@@ -121,8 +172,10 @@
   function setStuAuthState(loggedIn, name) {
     const auth = document.getElementById('stu-auth');
     const main = document.getElementById('stu-main');
+    const tabs = document.getElementById('role-tabs');
     if (auth) auth.style.display = loggedIn ? 'none' : 'block';
     if (main) main.style.display = loggedIn ? 'block' : 'none';
+    if (tabs) tabs.style.display = loggedIn ? 'none' : '';
     if (loggedIn && name) {
       const w = document.getElementById('stu-welcome');
       if (w) w.textContent = 'Hoş geldiniz, ' + name;
@@ -162,7 +215,9 @@
     const s = ov.student;
     const st = ov.stats || {};
     const pct = st.totalItems ? Math.round((st.completed / st.totalItems) * 100) : 0;
-    const ch = s.character || DEFAULT_CHAR;
+    const bp = (s.bookPages != null) ? s.bookPages : 0;
+    const bg = bookBarGoal(bp);
+    const bookFill = Math.min(100, Math.round((bp / bg) * 100));
     const moodTitles = { iyi: 'İyi gitti', orta: 'Orta seviye', kotu: 'Zayıf — destek gerek' };
     const moodCls = { iyi: 'mood-good', orta: 'mood-mid', kotu: 'mood-bad' };
     let moodGrid = '<div class="mood-grid">';
@@ -188,14 +243,15 @@
       '<div class="stat"><span class="muted">Bölüm</span><strong>' + escapeHtml(s.trackLabel || '—') + '</strong></div>' +
       '<div class="stat"><span class="muted">Tamamlanan</span><strong>' + (st.completed || 0) + ' / ' + (st.totalItems || 0) + '</strong></div>' +
       '<div class="stat"><span class="muted">Haftalık ilerleme</span><strong>%' + pct + '</strong></div>' +
-      '<div class="stat"><span class="muted">Seviye</span><strong>' + (ch.emoji || '') + ' ' + escapeHtml(ch.name || '') + '</strong><br/><span class="char-tag">XP: ' + (s.xp || 0) + '</span></div>' +
+      '<div class="stat"><span class="muted">Bilgi kitabı</span><strong>' +
+      bp + ' sayfa</strong><div class="book-bar" style="margin-top:6px"><div class="book-bar-fill" style="width:' + bookFill + '%"></div></div></div>' +
       '</div>' +
       '<p class="muted" style="margin:8px 0 4px">Konu geri bildirimi (öğrenci değerlendirmesi)</p>' +
       moodGrid;
   }
   function trackOptionsHtml(grade, selected) {
     const tracks = grade <= 10
-      ? [{ v: 'lgs', l: 'LGS' }]
+      ? [{ v: 'lgs', l: '9–10 · Lise ortak müfredat' }]
       : [
         { v: 'sayisal', l: 'Sayısal' },
         { v: 'sozel', l: 'Sözel' },
@@ -404,9 +460,12 @@
     const table = document.getElementById('stf-week-table');
     const todayDow = schoolDow(new Date());
     const sid = document.getElementById('stf-student').value;
+    const wPick = document.getElementById('stf-week').value;
+    const monday = wPick ? weekMondayLocal(new Date(wPick + 'T12:00:00')) : weekMondayLocal(new Date());
     let html = '<thead><tr>';
     DAYS.forEach((d) => {
-      html += '<th class="' + (d.dow === todayDow ? 'today' : '') + '">' + d.label + '</th>';
+      const dt = dayDateLabel(monday, d.dow);
+      html += '<th class="' + (d.dow === todayDow ? 'today' : '') + '">' + d.label + '<span class="day-date">' + dt + '</span></th>';
     });
     html += '</tr></thead><tbody><tr>';
     for (const day of DAYS) {
@@ -514,6 +573,10 @@
 
   function stfInit() {
     document.getElementById('stf-week').valueAsDate = new Date();
+    document.getElementById('stf-week').addEventListener('change', () => {
+      if (!stfToken()) return;
+      stfRenderWeekGrid().catch(() => {});
+    });
     const addGlobal = document.getElementById('stf-add-slot');
     if (addGlobal) addGlobal.style.display = 'none';
     document.getElementById('stf-login-btn').onclick = async () => {
@@ -564,24 +627,38 @@
   function renderProgress(prog) {
     const el = document.getElementById('stu-progress');
     if (!el || !prog) return;
-    const ch = prog.character || {};
-    const pct = prog.progressPercent != null ? prog.progressPercent : 0;
+    const pages = Number(prog.bookPages) || 0;
+    const goal = Number(prog.bookGoal) || bookBarGoal(pages);
+    const fill = prog.bookFillPct != null
+      ? Math.min(100, prog.bookFillPct)
+      : Math.min(100, Math.round((pages / goal) * 100));
     el.innerHTML =
-      '<div class="char-row">' +
-      '<span class="char-emoji">' + (ch.emoji || DEFAULT_CHAR.emoji) + '</span>' +
-      '<div><strong>' + escapeHtml(ch.name || DEFAULT_CHAR.name) + '</strong><br/><span class="char-tag">Ders Ustası yolculuğu · XP: ' + (prog.xp || 0) + '</span></div>' +
-      '</div>' +
-      '<div class="xp-bar"><div class="xp-fill" style="width:' + pct + '%"></div></div>';
+      '<div class="book-card">' +
+      '<div class="book-spine" aria-hidden="true"></div>' +
+      '<div class="book-body">' +
+      '<p class="book-title">📖 Bilgi kitabım</p>' +
+      '<p class="book-sub">Her tamamladığın görev kitabına bir sayfa ekler. Ne kadar çok çalışırsan kitap o kadar doluyor.</p>' +
+      '<p class="book-pages">' + pages + ' <span style="font-size:0.85rem;font-weight:600;color:var(--muted)">sayfa</span></p>' +
+      '<div class="book-bar"><div class="book-bar-fill" style="width:' + fill + '%"></div></div>' +
+      '<p class="char-tag" style="margin:8px 0 0">Sonraki hedef: ' + goal + ' sayfa</p>' +
+      '</div></div>';
   }
 
   function renderStuWeek(data) {
     STU_WEEK_ITEMS = data.items || [];
     const root = document.getElementById('stu-week-grid');
     const todayDow = data.dow || schoolDow(new Date());
-    if (progFromWeek(data)) renderProgress(progFromWeek(data));
+    let monday;
+    if (data.plan && data.plan.weekStart) {
+      const ws = String(data.plan.weekStart).slice(0, 10);
+      monday = weekMondayLocal(new Date(ws + 'T12:00:00'));
+    } else {
+      monday = weekMondayLocal(new Date());
+    }
     let html = '<table class="week-grid week-stu"><thead><tr>';
     DAYS.forEach((d) => {
-      html += '<th class="' + (d.dow === todayDow ? 'today' : '') + '">' + d.label + '</th>';
+      const dt = dayDateLabel(monday, d.dow);
+      html += '<th class="' + (d.dow === todayDow ? 'today' : '') + '">' + d.label + '<span class="day-date">' + dt + '</span></th>';
     });
     html += '</tr></thead><tbody><tr>';
     for (const day of DAYS) {
@@ -611,21 +688,6 @@
         btn.onclick = () => openStuModal(btn.getAttribute('data-id'));
       });
     }
-  }
-
-  function progFromWeek(data) {
-    if (!data.progress) return null;
-    const xp = data.progress.xp || 0;
-    const stages = [50, 150, 300, 500];
-    const ch = data.progress.character || DEFAULT_CHAR;
-    let prev = 0, next = 50, stage = 0;
-    for (let i = 0; i < stages.length; i++) {
-      if (xp < stages[i]) { next = stages[i]; stage = i; break; }
-      prev = stages[i];
-      stage = i + 1;
-    }
-    const pct = Math.min(100, Math.round(((xp - prev) / (next - prev)) * 100) || 0);
-    return { xp, character: ch, progressPercent: pct };
   }
 
   function openStuModal(itemId) {
@@ -671,9 +733,13 @@
       wrong: Number(document.getElementById('modal-wrong').value || 0),
       blank: Number(document.getElementById('modal-blank').value || 0),
     });
-    if (r.character) renderProgress({ xp: r.xp, character: r.character, progressPercent: 0 });
+    const gainedPage = done && Number(r.xpGain) > 0;
     closeStuModal();
     await stuRefresh();
+    if (gainedPage) {
+      confettiBurst();
+      showStudentToast('Tebrikler! Bilgi kitabına bir sayfa daha ekledik.');
+    }
   }
 
   async function stuRefresh() {

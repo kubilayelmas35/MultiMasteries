@@ -76,6 +76,7 @@
       padding: 10px 6px; font-size: 0.8rem; font-weight: 700; border: 1px solid #1e40af;
     }
     table.week-grid th.today { outline: 3px solid var(--accent); outline-offset: -2px; }
+    table.week-grid th .day-date { display: block; font-weight: 500; font-size: 0.72rem; opacity: 0.92; margin-top: 4px; }
     table.week-grid td {
       border: 1px solid var(--border); padding: 6px; vertical-align: top;
       background: var(--cell-empty); min-height: 120px;
@@ -149,6 +150,36 @@
     .fb-mood.mood-kotu { background: #ef4444; color: #fff; }
     .fb-note { margin: 6px 0 0; font-style: italic; }
     .char-tag { font-size: 0.75rem; color: var(--muted); }
+
+    .book-card { display: flex; gap: 16px; align-items: stretch; margin-top: 8px; }
+    .book-spine {
+      width: 22px; border-radius: 4px 0 0 4px;
+      background: linear-gradient(90deg, #7c3aed, #5b21b6);
+      box-shadow: inset -2px 0 0 rgba(0,0,0,0.2);
+    }
+    .book-body {
+      flex: 1; border: 1px solid var(--border); border-radius: 0 10px 10px 0;
+      padding: 12px 14px; background: var(--input-bg);
+    }
+    .book-title { font-weight: 700; font-size: 0.95rem; margin: 0 0 6px; }
+    .book-sub { font-size: 0.8rem; color: var(--muted); margin: 0 0 8px; }
+    .book-pages { font-size: 1.35rem; font-weight: 800; color: var(--accent); }
+    .book-bar { height: 12px; background: var(--border); border-radius: 999px; overflow: hidden; margin-top: 10px; }
+    .book-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #6366f1, #8b5cf6);
+      border-radius: 999px; transition: width 0.4s ease;
+    }
+    #confetti-layer { position: fixed; inset: 0; pointer-events: none; z-index: 200; overflow: hidden; }
+    .confetti-bit { position: absolute; width: 8px; height: 8px; top: -12px; opacity: 0.95; border-radius: 2px; }
+    #stu-toast {
+      display: none; position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%);
+      z-index: 250; max-width: 92vw; padding: 14px 20px; border-radius: 14px;
+      background: var(--card); border: 1px solid var(--accent); box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+      font-weight: 600; font-size: 0.92rem; text-align: center;
+    }
+    #stu-toast.open { display: block; animation: stu-toast-in 0.35s ease; }
+    @keyframes stu-toast-in { from { opacity: 0; transform: translateX(-50%) translateY(12px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
   </style>
 </head>
 <body>
@@ -157,9 +188,9 @@
       <h1>Haftalık ders programı</h1>
       <button type="button" class="ghost" id="theme-toggle" title="Açık / koyu mod">🌙</button>
     </div>
-    <p class="muted">Pazartesi–Pazar haftalık plan · Her güne ayrı satır ekleyip çıkarabilirsiniz. Müfredatta önce sınıf (9–12), 11–12 için bölüm seçin; 10. sınıf konusu da eklenebilir.</p>
+    <p class="muted">Pazartesi–Pazar haftalık plan · 9–10. sınıf konuları <strong>lise ortak müfredat</strong> olarak seçilir (LGS ortaokul son sınıf sınavıdır, lise 9–10 bununla karıştırılmaz). 11–12 için bölüm seçin.</p>
 
-    <div class="tabs">
+    <div class="tabs" id="role-tabs">
       <button type="button" class="tab on" data-tab="stu">Öğrenci</button>
       <button type="button" class="tab" data-tab="stf">Öğretmen</button>
     </div>
@@ -169,7 +200,7 @@
       <div id="stu-auth" class="auth-shell">
       <div class="auth-hero">
         <h2>Öğrenci paneli</h2>
-        <p>Haftalık planını takip et · Ders Ustası seviyene yüksel</p>
+        <p>Haftalık planını takip et · Her tamamlanan görev bilgi kitabına bir sayfa ekler</p>
       </div>
       <div class="card auth-card" id="stu-reg-card">
         <h2 style="font-size:1rem;margin:0 0 8px;">Kayıt ol</h2>
@@ -191,7 +222,7 @@
             </select>
           </div>
         </div>
-        <p class="muted" id="reg-track-hint" style="display:none;">9–10: müfredat LGS.</p>
+        <p class="muted" id="reg-track-hint" style="display:none;">9–10: lise ortak müfredat (TYT temeli). LGS, liseye giriş sınavıdır; lise öğrencisi için ayrı müfredat kullanılır.</p>
         <div style="margin-top:8px;"><label>Eğitim yılı (isteğe bağlı)</label><input id="reg-year" placeholder="2025-2026" /></div>
         <div class="toolbar"><button class="good" type="button" id="stu-reg-btn">Kayıt ol ve giriş</button></div>
         <div class="err" id="stu-reg-err"></div>
@@ -296,6 +327,9 @@
       </div>
     </div>
   </div>
+
+  <div id="confetti-layer" aria-hidden="true"></div>
+  <div id="stu-toast" role="status"></div>
 
   <script src="config.js"></script>
   <script src="app.js"></script>

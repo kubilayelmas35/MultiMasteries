@@ -2,6 +2,7 @@
 .env.*
 node_modules/
 deploy_payload.json
+deploy_edge_payload.json
 deploy_mcp_args_one_line.txt
 deploy_edge.json
 supabase/migrations/_seed_part*.sql
