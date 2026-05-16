@@ -83,7 +83,7 @@ async function buildWeekOverview(
 ) {
   const { data: stu } = await supabase
     .from("students")
-    .select("id, title, grade, track, xp, character_stage")
+    .select("id, title, grade, track, xp, character_stage, avatar_url")
     .eq("id", studentId)
     .maybeSingle();
   const xp = Number(stu?.xp) || 0;
@@ -147,6 +147,7 @@ async function buildWeekOverview(
       xp,
       character,
       bookPages,
+      avatarUrl: stu?.avatar_url || "",
     },
     stats: {
       totalItems: total,
@@ -544,7 +545,7 @@ Deno.serve(async (req) => {
       }
       case "studentprogress": {
         const studentId = await resolveStudentSession(supabase, String(body.sessionToken || ""));
-        const { data: stu, error } = await supabase.from("students").select("xp, character_stage, title").eq("id", studentId)
+        const { data: stu, error } = await supabase.from("students").select("xp, character_stage, title, avatar_url").eq("id", studentId)
           .maybeSingle();
         if (error) throw error;
         const xp = Number(stu?.xp) || 0;
@@ -572,6 +573,7 @@ Deno.serve(async (req) => {
           bookPages,
           bookGoal,
           bookFillPct,
+          avatarUrl: stu?.avatar_url || "",
         });
       }
       case "stafflogin": {
@@ -580,7 +582,7 @@ Deno.serve(async (req) => {
         if (!lc || !p) throw new Error("Kod ve PIN gerekli");
         const { data: st, error } = await supabase
           .from("staff")
-          .select("id, title")
+          .select("id, title, avatar_url")
           .eq("login_code", lc)
           .eq("pin", p)
           .eq("active", true)
@@ -601,6 +603,7 @@ Deno.serve(async (req) => {
           sessionToken,
           staffId: st.id,
           displayName: st.title || "Öğretmen",
+          avatarUrl: st.avatar_url || "",
         });
       }
       case "stafflogout": {
@@ -875,6 +878,168 @@ Deno.serve(async (req) => {
           },
           items: saved,
         });
+      }
+      case "staffplanhistory": {
+        const staffId = await resolveStaffSession(supabase, String(body.staffToken || ""));
+        const studentId = String(body.studentId || "");
+        await assertStaffOwnsStudent(supabase, staffId, studentId);
+        const { data: rows, error } = await supabase
+          .from("weekly_plans")
+          .select("week_start, title, status, updated_at")
+          .eq("staff_id", staffId)
+          .eq("student_id", studentId)
+          .order("week_start", { ascending: false })
+          .limit(52);
+        if (error) throw error;
+        return json(rows || []);
+      }
+      case "staffstudentanalytics": {
+        const staffId = await resolveStaffSession(supabase, String(body.staffToken || ""));
+        const studentId = String(body.studentId || "");
+        await assertStaffOwnsStudent(supabase, staffId, studentId);
+        const { count: bookPages, error: e1 } = await supabase
+          .from("study_logs")
+          .select("*", { count: "exact", head: true })
+          .eq("student_id", studentId)
+          .eq("kanban_status", "done");
+        if (e1) throw e1;
+        const { data: logs, error: e2 } = await supabase
+          .from("study_logs")
+          .select("mood, kanban_status")
+          .eq("student_id", studentId);
+        if (e2) throw e2;
+        let iyi = 0, orta = 0, kotu = 0, doneTotal = 0;
+        for (const l of logs || []) {
+          if (l.kanban_status === "done") doneTotal++;
+          const m = String(l.mood || "");
+          if (m === "iyi") iyi++;
+          else if (m === "orta") orta++;
+          else if (m === "kotu") kotu++;
+        }
+        const rated = iyi + orta + kotu;
+        const successRatePercent = rated ? Math.round((iyi / rated) * 100) : 0;
+        const { count: planCount, error: e3 } = await supabase
+          .from("weekly_plans")
+          .select("*", { count: "exact", head: true })
+          .eq("staff_id", staffId)
+          .eq("student_id", studentId);
+        if (e3) throw e3;
+        return json({
+          bookPages: bookPages ?? 0,
+          lessonsCompleted: doneTotal,
+          moodIyi: iyi,
+          moodOrta: orta,
+          moodKotu: kotu,
+          ratedLessons: rated,
+          successRatePercent,
+          plansCount: planCount ?? 0,
+        });
+      }
+      case "staffgetprofile": {
+        const staffId = await resolveStaffSession(supabase, String(body.staffToken || ""));
+        const { data, error } = await supabase
+          .from("staff")
+          .select("title, login_code, avatar_url")
+          .eq("id", staffId)
+          .maybeSingle();
+        if (error) throw error;
+        return json({
+          title: data?.title || "",
+          loginCode: data?.login_code || "",
+          avatarUrl: data?.avatar_url || "",
+        });
+      }
+      case "staffupdateprofile": {
+        const staffId = await resolveStaffSession(supabase, String(body.staffToken || ""));
+        const currentPin = normPin(body.currentPin || "");
+        const { data: row, error: verr } = await supabase.from("staff").select("pin").eq("id", staffId).maybeSingle();
+        if (verr) throw verr;
+        const updates: Record<string, unknown> = {};
+        if (body.title != null && String(body.title).trim().length) {
+          const t = String(body.title).trim();
+          if (t.length < 2) throw new Error("Ad / unvan en az 2 karakter");
+          updates.title = t;
+        }
+        if (body.pin != null && String(body.pin).length) {
+          if (!currentPin || currentPin !== row?.pin) throw new Error("Mevcut PIN gerekli ve doğru olmalı");
+          const p = normPin(body.pin);
+          if (p.length < 4) throw new Error("Yeni PIN en az 4 karakter");
+          if (p.length > 32) throw new Error("PIN çok uzun");
+          updates.pin = p;
+        }
+        if (body.loginCode != null && String(body.loginCode).trim().length) {
+          if (!currentPin || currentPin !== row?.pin) throw new Error("Kodu değiştirmek için mevcut PIN gerekli");
+          const lc = normCode(body.loginCode);
+          if (lc.length < 4) throw new Error("Kod en az 4 karakter");
+          if (!/^[A-Z0-9]+$/.test(lc)) throw new Error("Kod sadece harf ve rakam");
+          const { data: dup } = await supabase.from("staff").select("id").eq("login_code", lc).neq("id", staffId).limit(1);
+          if (dup?.length) throw new Error("Bu kod kullanılıyor");
+          updates.login_code = lc;
+        }
+        if (body.avatarUrl !== undefined) {
+          const u = String(body.avatarUrl || "");
+          if (u.length > 350000) throw new Error("Fotoğraf çok büyük; daha küçük görsel seçin");
+          updates.avatar_url = u;
+        }
+        if (Object.keys(updates).length === 0) return json({ ok: true });
+        const { error } = await supabase.from("staff").update(updates).eq("id", staffId);
+        if (error) throw error;
+        return json({ ok: true });
+      }
+      case "studentgetprofile": {
+        const studentId = await resolveStudentSession(supabase, String(body.sessionToken || ""));
+        const { data, error } = await supabase
+          .from("students")
+          .select("title, login_code, grade, track, avatar_url")
+          .eq("id", studentId)
+          .maybeSingle();
+        if (error) throw error;
+        const grade = Number(data?.grade) || 9;
+        return json({
+          title: data?.title || "",
+          loginCode: data?.login_code || "",
+          grade,
+          track: data?.track || "",
+          trackLabel: trackLabel(String(data?.track || ""), grade),
+          avatarUrl: data?.avatar_url || "",
+        });
+      }
+      case "studentupdateprofile": {
+        const studentId = await resolveStudentSession(supabase, String(body.sessionToken || ""));
+        const currentPin = normPin(body.currentPin || "");
+        const { data: row, error: verr } = await supabase.from("students").select("pin").eq("id", studentId).maybeSingle();
+        if (verr) throw verr;
+        const updates: Record<string, unknown> = {};
+        if (body.title != null && String(body.title).trim().length) {
+          const t = String(body.title).trim();
+          if (t.length < 2) throw new Error("Ad soyad en az 2 karakter");
+          updates.title = t;
+        }
+        if (body.pin != null && String(body.pin).length) {
+          if (!currentPin || currentPin !== row?.pin) throw new Error("Mevcut PIN gerekli ve doğru olmalı");
+          const p = normPin(body.pin);
+          if (p.length < 4) throw new Error("Yeni PIN en az 4 karakter");
+          if (p.length > 32) throw new Error("PIN çok uzun");
+          updates.pin = p;
+        }
+        if (body.loginCode != null && String(body.loginCode).trim().length) {
+          if (!currentPin || currentPin !== row?.pin) throw new Error("Kodu değiştirmek için mevcut PIN gerekli");
+          const lc = normCode(body.loginCode);
+          if (lc.length < 4) throw new Error("Kod en az 4 karakter");
+          if (!/^[A-Z0-9]+$/.test(lc)) throw new Error("Kod sadece harf ve rakam");
+          const { data: dup } = await supabase.from("students").select("id").eq("login_code", lc).neq("id", studentId).limit(1);
+          if (dup?.length) throw new Error("Bu kod kullanılıyor");
+          updates.login_code = lc;
+        }
+        if (body.avatarUrl !== undefined) {
+          const u = String(body.avatarUrl || "");
+          if (u.length > 350000) throw new Error("Fotoğraf çok büyük");
+          updates.avatar_url = u;
+        }
+        if (Object.keys(updates).length === 0) return json({ ok: true });
+        const { error } = await supabase.from("students").update(updates).eq("id", studentId);
+        if (error) throw error;
+        return json({ ok: true });
       }
       default:
         return err("Bilinmeyen action: " + action);

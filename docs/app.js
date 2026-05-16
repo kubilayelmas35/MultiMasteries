@@ -38,6 +38,13 @@
   let STU_WEEK_ITEMS = [];
   let MODAL_ITEM = null;
   let STF_OVERVIEW = null;
+  /** Sunucudaki giriş kodu (üst üste güncelleme isteği göndermemek için) */
+  let STF_PROFILE_SNAPSHOT = { loginCode: '' };
+  let STU_PROFILE_SNAPSHOT = { loginCode: '' };
+
+  function normCodeClient(code) {
+    return String(code || '').trim().toUpperCase();
+  }
 
   function bookBarGoal(pages) {
     const p = Number(pages) || 0;
@@ -46,12 +53,23 @@
     return g;
   }
 
+  function cellKey(dow, slot) {
+    return String(dow) + '-' + String(slot);
+  }
+
   function weekMondayLocal(anchor) {
     const x = new Date(anchor.getFullYear(), anchor.getMonth(), anchor.getDate(), 12, 0, 0);
     const js = x.getDay();
     const dow = js === 0 ? 7 : js;
     x.setDate(x.getDate() - (dow - 1));
     return x;
+  }
+  function formatFullWeekRange(monday) {
+    const sun = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + 6, 12, 0, 0);
+    function fmt(d) {
+      return String(d.getDate()).padStart(2, '0') + '.' + String(d.getMonth() + 1).padStart(2, '0') + '.' + d.getFullYear();
+    }
+    return fmt(monday) + ' – ' + fmt(sun);
   }
   function dayDateLabel(monday, dayDow) {
     const d = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + (dayDow - 1), 12, 0, 0);
@@ -173,24 +191,165 @@
     const auth = document.getElementById('stu-auth');
     const main = document.getElementById('stu-main');
     const tabs = document.getElementById('role-tabs');
+    const img = document.getElementById('stu-avatar');
     if (auth) auth.style.display = loggedIn ? 'none' : 'block';
     if (main) main.style.display = loggedIn ? 'block' : 'none';
     if (tabs) tabs.style.display = loggedIn ? 'none' : '';
+    if (!loggedIn && img) {
+      img.style.display = 'none';
+      img.removeAttribute('src');
+    }
     if (loggedIn && name) {
       const w = document.getElementById('stu-welcome');
       if (w) w.textContent = 'Hoş geldiniz, ' + name;
     }
   }
-  function setStfAuthState(loggedIn, name) {
+  function setStfAuthState(loggedIn, name, avatarUrl) {
     const auth = document.getElementById('stf-auth');
     const main = document.getElementById('stf-main');
+    const img = document.getElementById('stf-avatar');
     if (auth) auth.style.display = loggedIn ? 'none' : 'block';
     if (main) main.style.display = loggedIn ? 'block' : 'none';
+    if (!loggedIn) {
+      if (img) {
+        img.style.display = 'none';
+        img.removeAttribute('src');
+      }
+    } else if (img) {
+      if (avatarUrl) {
+        img.src = avatarUrl;
+        img.style.display = '';
+      } else {
+        img.style.display = 'none';
+        img.removeAttribute('src');
+      }
+    }
     if (loggedIn && name) {
       const w = document.getElementById('stf-welcome');
       if (w) w.textContent = 'Hoş geldiniz, ' + name;
     }
   }
+
+  async function refreshStfHeaderFromServer() {
+    if (!stfToken()) return;
+    try {
+      const p = await post('staffgetprofile', { staffToken: stfToken() });
+      setStfAuthState(true, p.title || 'Öğretmen', p.avatarUrl || '');
+    } catch (e) {}
+  }
+
+  function updateStfWeekRangeDisplay() {
+    const inp = document.getElementById('stf-week');
+    const el = document.getElementById('stf-week-range');
+    if (!inp || !el) return;
+    const mon = inp.value ? weekMondayLocal(new Date(inp.value + 'T12:00:00')) : weekMondayLocal(new Date());
+    el.textContent = formatFullWeekRange(mon);
+  }
+  function shiftStfWeekByDays(delta) {
+    const inp = document.getElementById('stf-week');
+    if (!inp) return;
+    const base = inp.value ? new Date(inp.value + 'T12:00:00') : new Date();
+    base.setDate(base.getDate() + delta);
+    inp.value = base.toISOString().slice(0, 10);
+    updateStfWeekRangeDisplay();
+    const sid = document.getElementById('stf-student').value;
+    if (sid && stfToken()) {
+      stfLoadPlan().catch((e) => {
+        document.getElementById('stf-err').textContent = e.message;
+      });
+    }
+  }
+  function renderStfAnalytics(a) {
+    const chips = document.getElementById('stf-analytics-chips');
+    const bars = document.getElementById('mood-bars');
+    const donut = document.getElementById('mood-donut');
+    if (!chips || !bars) return;
+    if (!a) {
+      chips.innerHTML = '<span class="muted">Öğrenci seçin</span>';
+      bars.innerHTML = '';
+      if (donut) donut.style.display = 'none';
+      return;
+    }
+    chips.innerHTML =
+      '<div class="stat-chip"><span class="muted">Tamamlanan görev</span><strong>' + (a.lessonsCompleted || 0) + '</strong></div>' +
+      '<div class="stat-chip"><span class="muted">Bilgi kitabı (sayfa)</span><strong>' + (a.bookPages || 0) + '</strong></div>' +
+      '<div class="stat-chip"><span class="muted">Başarı oranı (iyi payı)</span><strong>%' + (a.successRatePercent || 0) + '</strong></div>' +
+      '<div class="stat-chip"><span class="muted">Derecelendirilen</span><strong>' + (a.ratedLessons || 0) + '</strong></div>' +
+      '<div class="stat-chip"><span class="muted">Plan sayısı</span><strong>' + (a.plansCount || 0) + '</strong></div>';
+    const tot = Math.max(1, (a.moodIyi || 0) + (a.moodOrta || 0) + (a.moodKotu || 0));
+    const pi = ((a.moodIyi || 0) / tot) * 100;
+    const po = ((a.moodOrta || 0) / tot) * 100;
+    const pk = ((a.moodKotu || 0) / tot) * 100;
+    function barRow(label, n, cls) {
+      const pct = Math.round((n / tot) * 100);
+      return '<div class="bar-row"><span style="width:72px">' + label + '</span><div class="bar-track"><div class="bar-fill ' + cls + '" style="width:' + pct + '%"></div></div><span>' + n + '</span></div>';
+    }
+    bars.innerHTML = barRow('İyi', a.moodIyi || 0, 'iyi') + barRow('Orta', a.moodOrta || 0, 'orta') + barRow('Kötü', a.moodKotu || 0, 'kotu');
+    if (donut && tot > 0) {
+      const deg1 = (a.moodIyi || 0) / tot * 360;
+      const deg2 = deg1 + (a.moodOrta || 0) / tot * 360;
+      donut.style.display = 'block';
+      donut.style.setProperty('--p1', deg1 + 'deg');
+      donut.style.setProperty('--p2', deg2 + 'deg');
+    } else if (donut) donut.style.display = 'none';
+  }
+  async function stfRefreshHistoryAndAnalytics() {
+    const sid = document.getElementById('stf-student').value;
+    if (!sid || !stfToken()) {
+      renderStfAnalytics(null);
+      return;
+    }
+    try {
+      const hist = await post('staffplanhistory', { staffToken: stfToken(), studentId: sid });
+      const sel = document.getElementById('stf-week-history');
+      if (sel) {
+        const cur = document.getElementById('stf-week').value;
+        let h = '<option value="">— Kayıtlı plan seç —</option>';
+        (hist || []).forEach((row) => {
+          const ws = String(row.week_start).slice(0, 10);
+          const lab = ws + ' · ' + (row.status === 'published' ? 'Yayın' : 'Taslak');
+          h += '<option value="' + ws + '">' + escapeHtml(lab) + '</option>';
+        });
+        sel.innerHTML = h;
+        if (cur) {
+          const opt = Array.from(sel.options).find((o) => o.value === cur);
+          if (opt) sel.value = cur;
+        }
+      }
+    } catch (e) {}
+    try {
+      const a = await post('staffstudentanalytics', { staffToken: stfToken(), studentId: sid });
+      renderStfAnalytics(a);
+    } catch (e) {
+      renderStfAnalytics(null);
+    }
+  }
+  function fileToResizedDataUrl(file, maxSide, callback) {
+    const reader = new FileReader();
+    reader.onload = function () {
+      const img = new Image();
+      img.onload = function () {
+        let w = img.width; let h = img.height;
+        if (w > maxSide || h > maxSide) {
+          if (w > h) {
+            h = Math.round((h * maxSide) / w);
+            w = maxSide;
+          } else {
+            w = Math.round((w * maxSide) / h);
+            h = maxSide;
+          }
+        }
+        const c = document.createElement('canvas');
+        c.width = w;
+        c.height = h;
+        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        callback(c.toDataURL('image/jpeg', 0.82));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
   function studentLogHtml(log) {
     if (!log) return '';
     const done = log.kanbanStatus === 'done';
@@ -532,11 +691,15 @@
       TOPIC_CACHE = {};
       STF_OVERVIEW = null;
       renderStfStudentPanel(null);
+      updateStfWeekRangeDisplay();
       const w = document.getElementById('stf-week').value;
       if (sel.value && w) {
         stfLoadPlan().catch((e) => {
           document.getElementById('stf-err').textContent = e.message;
         });
+      } else {
+        stfRenderWeekGrid().catch(() => {});
+        stfRefreshHistoryAndAnalytics();
       }
     };
   }
@@ -554,6 +717,7 @@
     itemsToCells(data.items || []);
     renderStfStudentPanel(STF_OVERVIEW);
     await stfRenderWeekGrid();
+    await stfRefreshHistoryAndAnalytics();
   }
 
   async function stfSave(status) {
@@ -571,12 +735,125 @@
     await stfLoadPlan();
   }
 
+  async function loadStfProfileForm() {
+    const errEl = document.getElementById('stf-prof-err');
+    errEl.textContent = '';
+    try {
+      const p = await post('staffgetprofile', { staffToken: stfToken() });
+      document.getElementById('stf-prof-title').value = p.title || '';
+      document.getElementById('stf-prof-code').value = p.loginCode || '';
+      STF_PROFILE_SNAPSHOT.loginCode = normCodeClient(p.loginCode || '');
+      document.getElementById('stf-prof-pin-new').value = '';
+      document.getElementById('stf-prof-pin-current').value = '';
+      const prev = document.getElementById('stf-prof-avatar-preview');
+      const f = document.getElementById('stf-prof-file');
+      if (f) f.value = '';
+      if (p.avatarUrl) {
+        prev.src = p.avatarUrl;
+        prev.style.display = '';
+      } else {
+        prev.removeAttribute('src');
+        prev.style.display = 'none';
+      }
+    } catch (e) {
+      errEl.textContent = e.message;
+    }
+  }
+
   function stfInit() {
-    document.getElementById('stf-week').valueAsDate = new Date();
-    document.getElementById('stf-week').addEventListener('change', () => {
+    const weekInp = document.getElementById('stf-week');
+    weekInp.valueAsDate = new Date();
+    updateStfWeekRangeDisplay();
+    weekInp.addEventListener('change', () => {
       if (!stfToken()) return;
-      stfRenderWeekGrid().catch(() => {});
+      updateStfWeekRangeDisplay();
+      const sid = document.getElementById('stf-student').value;
+      if (sid) {
+        stfLoadPlan().catch((e) => {
+          document.getElementById('stf-err').textContent = e.message;
+        });
+      } else {
+        stfRenderWeekGrid().catch(() => {});
+      }
     });
+    const prevBtn = document.getElementById('stf-week-prev');
+    const nextBtn = document.getElementById('stf-week-next');
+    if (prevBtn) prevBtn.onclick = () => shiftStfWeekByDays(-7);
+    if (nextBtn) nextBtn.onclick = () => shiftStfWeekByDays(7);
+    const histSel = document.getElementById('stf-week-history');
+    if (histSel) {
+      histSel.addEventListener('change', () => {
+        const v = histSel.value;
+        if (!v || !stfToken()) return;
+        weekInp.value = v;
+        updateStfWeekRangeDisplay();
+        const sid = document.getElementById('stf-student').value;
+        if (sid) {
+          stfLoadPlan().catch((e) => {
+            document.getElementById('stf-err').textContent = e.message;
+          });
+        }
+      });
+    }
+    document.querySelectorAll('#stf-subtabs .subtab').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#stf-subtabs .subtab').forEach((b) => b.classList.remove('on'));
+        btn.classList.add('on');
+        const tab = btn.getAttribute('data-stf-tab');
+        const panStu = document.getElementById('stf-panel-students');
+        const panPr = document.getElementById('stf-panel-profile');
+        if (panStu) panStu.style.display = tab === 'students' ? 'block' : 'none';
+        if (panPr) panPr.style.display = tab === 'profile' ? 'block' : 'none';
+        if (tab === 'profile') loadStfProfileForm();
+      });
+    });
+    const stfProfFile = document.getElementById('stf-prof-file');
+    if (stfProfFile) {
+      stfProfFile.addEventListener('change', () => {
+        const file = stfProfFile.files && stfProfFile.files[0];
+        const prev = document.getElementById('stf-prof-avatar-preview');
+        if (!file || !prev) return;
+        fileToResizedDataUrl(file, 480, (url) => {
+          prev.src = url;
+          prev.style.display = '';
+        });
+      });
+    }
+    document.getElementById('stf-prof-save').onclick = () => {
+      const errEl = document.getElementById('stf-prof-err');
+      errEl.textContent = '';
+      const sendPayload = (avatarUrl) => {
+        const payload = {
+          staffToken: stfToken(),
+          title: document.getElementById('stf-prof-title').value.trim(),
+          currentPin: document.getElementById('stf-prof-pin-current').value,
+        };
+        const pinNew = document.getElementById('stf-prof-pin-new').value;
+        if (pinNew) payload.pin = pinNew;
+        const codeNorm = normCodeClient(document.getElementById('stf-prof-code').value);
+        if (codeNorm !== STF_PROFILE_SNAPSHOT.loginCode) payload.loginCode = codeNorm;
+        if (avatarUrl !== undefined) payload.avatarUrl = avatarUrl;
+        post('staffupdateprofile', payload)
+          .then(() => {
+            errEl.textContent = 'Profil güncellendi.';
+            document.getElementById('stf-prof-pin-new').value = '';
+            document.getElementById('stf-prof-pin-current').value = '';
+            const fi = document.getElementById('stf-prof-file');
+            if (fi) fi.value = '';
+            return refreshStfHeaderFromServer();
+          })
+          .then(() => loadStfProfileForm())
+          .catch((e) => {
+            errEl.textContent = e.message;
+          });
+      };
+      const fi = document.getElementById('stf-prof-file');
+      if (fi && fi.files && fi.files[0]) {
+        fileToResizedDataUrl(fi.files[0], 512, (dataUrl) => sendPayload(dataUrl));
+      } else {
+        sendPayload();
+      }
+    };
     const addGlobal = document.getElementById('stf-add-slot');
     if (addGlobal) addGlobal.style.display = 'none';
     document.getElementById('stf-login-btn').onclick = async () => {
@@ -587,9 +864,20 @@
           pin: document.getElementById('stf-pin').value,
         });
         stfSetToken(r.sessionToken);
-        setStfAuthState(true, r.displayName || '');
+        setStfAuthState(true, r.displayName || '', r.avatarUrl || '');
         await stfLoadStudents();
-        await stfRenderWeekGrid();
+        updateStfWeekRangeDisplay();
+        document.getElementById('stf-err').textContent = '';
+        try {
+          if (document.getElementById('stf-student').value && document.getElementById('stf-week').value) {
+            await stfLoadPlan();
+          } else {
+            await stfRenderWeekGrid();
+            await stfRefreshHistoryAndAnalytics();
+          }
+        } catch (e2) {
+          document.getElementById('stf-err').textContent = e2.message;
+        }
       } catch (e) {
         document.getElementById('stf-login-err').textContent = e.message;
       }
@@ -600,6 +888,7 @@
       setStfAuthState(false);
       STF_OVERVIEW = null;
       renderStfStudentPanel(null);
+      renderStfAnalytics(null);
     };
     document.getElementById('stf-load').onclick = async () => {
       try { await stfLoadPlan(); } catch (e) { document.getElementById('stf-err').textContent = e.message; }
@@ -614,7 +903,23 @@
     };
     if (stfToken()) {
       setStfAuthState(true);
-      stfLoadStudents().then(() => stfRenderWeekGrid()).catch(() => {});
+      refreshStfHeaderFromServer()
+        .then(() => stfLoadStudents())
+        .then(async () => {
+          updateStfWeekRangeDisplay();
+          document.getElementById('stf-err').textContent = '';
+          try {
+            if (document.getElementById('stf-student').value && document.getElementById('stf-week').value) {
+              await stfLoadPlan();
+            } else {
+              await stfRenderWeekGrid();
+              await stfRefreshHistoryAndAnalytics();
+            }
+          } catch (e) {
+            document.getElementById('stf-err').textContent = e.message;
+          }
+        })
+        .catch(() => {});
     } else {
       setStfAuthState(false);
     }
@@ -753,6 +1058,45 @@
     renderStuWeek(data);
     const prog = await post('studentprogress', { sessionToken: tok });
     renderProgress(prog);
+    const av = document.getElementById('stu-avatar');
+    if (av && prog) {
+      if (prog.avatarUrl) {
+        av.src = prog.avatarUrl;
+        av.style.display = '';
+      } else {
+        av.style.display = 'none';
+        av.removeAttribute('src');
+      }
+    }
+    if (prog && prog.displayName) {
+      const w = document.getElementById('stu-welcome');
+      if (w) w.textContent = 'Hoş geldiniz, ' + prog.displayName;
+    }
+  }
+
+  async function loadStuProfileForm() {
+    const errEl = document.getElementById('stu-prof-err');
+    errEl.textContent = '';
+    try {
+      const p = await post('studentgetprofile', { sessionToken: stuToken() });
+      document.getElementById('stu-prof-title').value = p.title || '';
+      document.getElementById('stu-prof-code').value = p.loginCode || '';
+      STU_PROFILE_SNAPSHOT.loginCode = normCodeClient(p.loginCode || '');
+      document.getElementById('stu-prof-pin-new').value = '';
+      document.getElementById('stu-prof-pin-current').value = '';
+      const prev = document.getElementById('stu-prof-avatar-preview');
+      const f = document.getElementById('stu-prof-file');
+      if (f) f.value = '';
+      if (p.avatarUrl) {
+        prev.src = p.avatarUrl;
+        prev.style.display = '';
+      } else {
+        prev.removeAttribute('src');
+        prev.style.display = 'none';
+      }
+    } catch (e) {
+      errEl.textContent = e.message;
+    }
   }
 
   function stuInit() {
@@ -764,6 +1108,58 @@
     document.getElementById('modal-save').onclick = () => saveStuModal().catch((e) => alert(e.message));
     document.getElementById('stu-modal').onclick = (e) => {
       if (e.target.id === 'stu-modal') closeStuModal();
+    };
+
+    let stuProfileOpen = false;
+    document.getElementById('stu-profile-toggle').onclick = () => {
+      const p = document.getElementById('stu-profile-panel');
+      stuProfileOpen = !stuProfileOpen;
+      p.style.display = stuProfileOpen ? 'block' : 'none';
+      if (stuProfileOpen) loadStuProfileForm();
+    };
+    document.getElementById('stu-prof-file').addEventListener('change', () => {
+      const file = document.getElementById('stu-prof-file').files && document.getElementById('stu-prof-file').files[0];
+      const prev = document.getElementById('stu-prof-avatar-preview');
+      if (!file || !prev) return;
+      fileToResizedDataUrl(file, 480, (url) => {
+        prev.src = url;
+        prev.style.display = '';
+      });
+    });
+    document.getElementById('stu-prof-save').onclick = () => {
+      const errEl = document.getElementById('stu-prof-err');
+      errEl.textContent = '';
+      const sendPayload = (avatarUrl) => {
+        const payload = {
+          sessionToken: stuToken(),
+          title: document.getElementById('stu-prof-title').value.trim(),
+          currentPin: document.getElementById('stu-prof-pin-current').value,
+        };
+        const pinNew = document.getElementById('stu-prof-pin-new').value;
+        if (pinNew) payload.pin = pinNew;
+        const codeNorm = normCodeClient(document.getElementById('stu-prof-code').value);
+        if (codeNorm !== STU_PROFILE_SNAPSHOT.loginCode) payload.loginCode = codeNorm;
+        if (avatarUrl !== undefined) payload.avatarUrl = avatarUrl;
+        post('studentupdateprofile', payload)
+          .then(() => {
+            errEl.textContent = 'Profil güncellendi.';
+            document.getElementById('stu-prof-pin-new').value = '';
+            document.getElementById('stu-prof-pin-current').value = '';
+            const fi = document.getElementById('stu-prof-file');
+            if (fi) fi.value = '';
+            return stuRefresh();
+          })
+          .then(() => loadStuProfileForm())
+          .catch((e) => {
+            errEl.textContent = e.message;
+          });
+      };
+      const fi = document.getElementById('stu-prof-file');
+      if (fi && fi.files && fi.files[0]) {
+        fileToResizedDataUrl(fi.files[0], 512, (dataUrl) => sendPayload(dataUrl));
+      } else {
+        sendPayload();
+      }
     };
 
     function updateRegTrackUi() {
@@ -808,6 +1204,9 @@
       try { await post('studentlogout', { sessionToken: stuToken() }); } catch (e) {}
       stuSetToken('');
       setStuAuthState(false);
+      stuProfileOpen = false;
+      const pp = document.getElementById('stu-profile-panel');
+      if (pp) pp.style.display = 'none';
     };
     if (stuToken()) {
       setStuAuthState(true);

@@ -180,6 +180,36 @@
     }
     #stu-toast.open { display: block; animation: stu-toast-in 0.35s ease; }
     @keyframes stu-toast-in { from { opacity: 0; transform: translateX(-50%) translateY(12px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+
+    .subtabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 14px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    .subtab {
+      padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--input-bg); color: var(--text); cursor: pointer; font-weight: 600; font-size: 0.88rem;
+    }
+    .subtab.on { border-color: var(--accent); background: var(--card); box-shadow: 0 0 0 1px var(--accent) inset; }
+    .stf-panel { margin-top: 4px; }
+    .week-nav { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 8px 0; }
+    .week-nav button { width: auto; min-width: 44px; font-size: 1.1rem; line-height: 1; padding: 8px 12px; }
+    .week-range-label { font-size: 0.85rem; color: var(--muted); min-width: 140px; }
+    #stf-week-history { max-width: 260px; }
+    .analytics-block { margin-top: 14px; padding: 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--input-bg); }
+    .analytics-block h3 { margin: 0 0 10px; font-size: 0.95rem; }
+    .stat-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+    .stat-chip { padding: 8px 12px; border-radius: 10px; background: var(--card); border: 1px solid var(--border); font-size: 0.85rem; }
+    .stat-chip strong { display: block; font-size: 1.1rem; }
+    .bar-chart { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+    .bar-row { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; }
+    .bar-track { flex: 1; height: 10px; background: var(--border); border-radius: 999px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 999px; }
+    .bar-fill.iyi { background: #22c55e; }
+    .bar-fill.orta { background: #eab308; }
+    .bar-fill.kotu { background: #ef4444; }
+    .donut { width: 100px; height: 100px; border-radius: 50%; margin: 8px auto;
+      background: conic-gradient(var(--accent2) 0deg var(--p1, 0deg), #eab308 var(--p1, 0deg) var(--p2, 0deg), #ef4444 var(--p2, 0deg) 360deg); }
+    .avatar-preview { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); background: var(--input-bg); }
+    .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 700px) { .profile-grid { grid-template-columns: 1fr; } }
+    .avatar-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
   </style>
 </head>
 <body>
@@ -188,7 +218,6 @@
       <h1>Haftalık ders programı</h1>
       <button type="button" class="ghost" id="theme-toggle" title="Açık / koyu mod">🌙</button>
     </div>
-    <p class="muted">Pazartesi–Pazar haftalık plan · 9–10. sınıf konuları <strong>lise ortak müfredat</strong> olarak seçilir (LGS ortaokul son sınıf sınavıdır, lise 9–10 bununla karıştırılmaz). 11–12 için bölüm seçin.</p>
 
     <div class="tabs" id="role-tabs">
       <button type="button" class="tab on" data-tab="stu">Öğrenci</button>
@@ -242,10 +271,31 @@
       <div id="stu-main" style="display:none;">
         <div class="card">
           <div class="welcome-row">
-            <div class="muted" id="stu-welcome"></div>
-            <button class="ghost" type="button" id="stu-logout-btn">Çıkış</button>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+              <img id="stu-avatar" class="avatar-preview" alt="" style="display:none;width:48px;height:48px;" />
+              <div class="muted" id="stu-welcome"></div>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="ghost" type="button" id="stu-profile-toggle">Profil</button>
+              <button class="ghost" type="button" id="stu-logout-btn">Çıkış</button>
+            </div>
           </div>
           <div id="stu-progress"></div>
+          <div id="stu-profile-panel" class="card" style="display:none;margin:12px 0 0;padding:12px;border:1px dashed var(--border);">
+            <h3 style="margin:0 0 10px;font-size:1rem;">Profil</h3>
+            <div class="avatar-row">
+              <img id="stu-prof-avatar-preview" class="avatar-preview" alt="Önizleme" src="" style="display:none" />
+              <div><label>Fotoğraf (JPEG/PNG, küçük dosya)</label><input type="file" id="stu-prof-file" accept="image/*" /></div>
+            </div>
+            <div class="profile-grid" style="margin-top:10px;">
+              <div><label>Ad soyad</label><input id="stu-prof-title" /></div>
+              <div><label>Giriş kodu (değişimde mevcut PIN gerekir)</label><input id="stu-prof-code" autocomplete="off" /></div>
+              <div><label>Yeni PIN (boş bırakılmazsa mevcut PIN gerekir)</label><input id="stu-prof-pin-new" type="password" /></div>
+              <div><label>Mevcut PIN (kod veya PIN değişince)</label><input id="stu-prof-pin-current" type="password" /></div>
+            </div>
+            <div class="toolbar"><button class="primary" type="button" id="stu-prof-save">Kaydet</button></div>
+            <div class="err" id="stu-prof-err"></div>
+          </div>
         </div>
         <div class="card">
           <h2 style="font-size:1rem;margin:0 0 8px;">Bu haftanın programı (göreve tıklayın)</h2>
@@ -276,12 +326,33 @@
       <div id="stf-main" style="display:none;">
         <div class="card">
           <div class="welcome-row">
-            <div class="muted" id="stf-welcome"></div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <img id="stf-avatar" class="avatar-preview" alt="" style="display:none;width:48px;height:48px;" />
+              <div class="muted" id="stf-welcome"></div>
+            </div>
             <button class="ghost" type="button" id="stf-logout-btn">Çıkış</button>
           </div>
+          <div class="subtabs" id="stf-subtabs">
+            <button type="button" class="subtab on" data-stf-tab="students">Öğrencilerim</button>
+            <button type="button" class="subtab" data-stf-tab="profile">Profil</button>
+          </div>
+
+          <div id="stf-panel-students" class="stf-panel">
           <div class="row" style="margin-top:10px;">
             <div><label>Öğrenci</label><select id="stf-student"></select></div>
-            <div><label>Hafta (herhangi bir gün)</label><input type="date" id="stf-week" /></div>
+            <div>
+              <label>Hafta</label>
+              <div class="week-nav">
+                <button type="button" class="ghost" id="stf-week-prev" title="Önceki hafta">◀</button>
+                <input type="date" id="stf-week" />
+                <button type="button" class="ghost" id="stf-week-next" title="Sonraki hafta">▶</button>
+                <span class="week-range-label" id="stf-week-range"></span>
+              </div>
+            </div>
+          </div>
+          <div class="row" style="margin-top:8px;">
+            <div><label>Geçmiş planlar</label><select id="stf-week-history"><option value="">— Hafta seç veya yukarıdan tarih —</option></select></div>
+            <div style="align-self:end"><span class="muted" id="stf-week-hint" style="font-size:0.8rem;"></span></div>
           </div>
           <div style="margin-top:8px;"><label>Plan başlığı</label><input id="stf-title" placeholder="Haftalık plan" /></div>
           <div class="toolbar">
@@ -291,8 +362,37 @@
             <button class="good" type="button" id="stf-publish">Yayınla (öğrenciye aç)</button>
           </div>
           <div class="err" id="stf-err"></div>
+
+          <div id="stf-analytics" class="analytics-block">
+            <h3>Seçili öğrenci analizi</h3>
+            <div class="stat-chips" id="stf-analytics-chips"></div>
+            <p class="muted" style="margin:0 0 6px;font-size:0.8rem;">Değerlendirme dağılımı (İyi / Orta / Kötü)</p>
+            <div class="bar-chart" id="mood-bars"></div>
+            <div style="text-align:center;margin-top:10px;">
+              <div id="mood-donut" class="donut" style="display:none;"></div>
+              <p class="muted" style="margin:6px 0 0;font-size:0.78rem;">Başarı oranı: tamamlanan “iyi” tepkiler / tüm derecelendirilen görev</p>
+            </div>
+          </div>
+
           <div id="stf-student-panel" class="card" style="margin-top:12px;padding:0;border:none;background:transparent"></div>
           <div class="week-scroll"><table class="week-grid" id="stf-week-table"></table></div>
+          </div>
+
+          <div id="stf-panel-profile" class="stf-panel" style="display:none;">
+            <h3 style="margin:0 0 12px;font-size:1rem;">Öğretmen profili</h3>
+            <div class="avatar-row">
+              <img id="stf-prof-avatar-preview" class="avatar-preview" alt="" style="display:none" />
+              <div><label>Fotoğraf</label><input type="file" id="stf-prof-file" accept="image/*" /></div>
+            </div>
+            <div class="profile-grid" style="margin-top:10px;">
+              <div><label>Görünen ad</label><input id="stf-prof-title" /></div>
+              <div><label>Giriş kodu</label><input id="stf-prof-code" autocomplete="off" /></div>
+              <div><label>Yeni PIN</label><input id="stf-prof-pin-new" type="password" /></div>
+              <div><label>Mevcut PIN (kod veya PIN değişince zorunlu)</label><input id="stf-prof-pin-current" type="password" /></div>
+            </div>
+            <div class="toolbar"><button class="primary" type="button" id="stf-prof-save">Profili kaydet</button></div>
+            <div class="err" id="stf-prof-err"></div>
+          </div>
         </div>
       </div>
     </div>
