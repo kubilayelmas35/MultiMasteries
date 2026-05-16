@@ -1,39 +1,39 @@
-grade,track,Subject,title,sortOrder,defaultMinutes
-12,esit,Matematik,Fonksiyonlar,10,50
-12,esit,Matematik,Polinomlar,20,50
-12,esit,Matematik,İkinci derece,30,50
-12,esit,Matematik,Permütasyon,40,50
-12,esit,Matematik,Olasılık,50,50
-12,esit,Matematik,Logaritma,60,50
-12,esit,Matematik,Trigonometri,70,50
-12,esit,Matematik,Diziler,80,50
-12,esit,Matematik,Limit,90,50
-12,esit,Matematik,Türev,100,50
-12,esit,Matematik,İntegral,110,50
-12,esit,Matematik,Problemler,120,50
-12,esit,Türk Dili ve Edebiyatı,Şiir,10,50
-12,esit,Türk Dili ve Edebiyatı,Roman,20,50
-12,esit,Türk Dili ve Edebiyatı,Hikâye,30,50
-12,esit,Türk Dili ve Edebiyatı,Tiyatro,40,50
-12,esit,Türk Dili ve Edebiyatı,Edebi sanatlar,50,50
-12,esit,Türk Dili ve Edebiyatı,Cumhuriyet edebiyatı,60,50
-12,esit,Türk Dili ve Edebiyatı,Dünya edebiyatı,70,50
-12,esit,Türk Dili ve Edebiyatı,Metin türleri,80,50
-12,esit,Tarih,Osmanlı tarihi,10,45
-12,esit,Tarih,Kurtuluş Savaşı,20,45
-12,esit,Tarih,Atatürk inkılapları,30,45
-12,esit,Tarih,Çağdaş Türk tarihi,40,45
-12,esit,Tarih,XX. yüzyıl,50,45
-12,esit,Coğrafya,Fiziki coğrafya,10,45
-12,esit,Coğrafya,Beşeri coğrafya,20,45
-12,esit,Coğrafya,Türkiye coğrafyası,30,45
-12,esit,Coğrafya,Ekonomik coğrafya,40,45
-12,esit,Coğrafya,Çevre,50,45
-12,esit,Türkçe,Paragraf ana düşünce,10,40
-12,esit,Türkçe,Paragraf yardımcı düşünce,20,40
-12,esit,Türkçe,Paragraf tamamlama,30,40
-12,esit,Türkçe,Cümle tamamlama,40,40
-12,esit,Türkçe,Anlatım bozuklukları,50,40
-12,esit,Türkçe,Sözcükte anlam,60,40
-12,esit,Türkçe,Cümlede anlam,70,40
-12,esit,Türkçe,Yazım kuralları,80,40
+grade,track,Subject,title,sortOrder,defaultMinutes,examTyt,examAyt
+12,esit,Matematik,Fonksiyonlar,10,50,2,3
+12,esit,Matematik,Polinomlar,20,50,0,1
+12,esit,Matematik,İkinci derece,30,50,0,1
+12,esit,Matematik,Permütasyon,40,50,0,1
+12,esit,Matematik,Olasılık,50,50,0,1
+12,esit,Matematik,Logaritma,60,50,0,1
+12,esit,Matematik,Trigonometri,70,50,0,1
+12,esit,Matematik,Diziler,80,50,0,1
+12,esit,Matematik,Limit,90,50,0,1
+12,esit,Matematik,Türev,100,50,0,1
+12,esit,Matematik,İntegral,110,50,0,1
+12,esit,Matematik,Problemler,120,50,3,2
+12,esit,Türk Dili ve Edebiyatı,Şiir,10,50,0,1
+12,esit,Türk Dili ve Edebiyatı,Roman,20,50,0,1
+12,esit,Türk Dili ve Edebiyatı,Hikâye,30,50,0,1
+12,esit,Türk Dili ve Edebiyatı,Tiyatro,40,50,0,1
+12,esit,Türk Dili ve Edebiyatı,Edebi sanatlar,50,50,0,1
+12,esit,Türk Dili ve Edebiyatı,Cumhuriyet edebiyatı,60,50,0,1
+12,esit,Türk Dili ve Edebiyatı,Dünya edebiyatı,70,50,0,1
+12,esit,Türk Dili ve Edebiyatı,Metin türleri,80,50,0,1
+12,esit,Tarih,Osmanlı tarihi,10,45,0,1
+12,esit,Tarih,Kurtuluş Savaşı,20,45,0,1
+12,esit,Tarih,Atatürk inkılapları,30,45,0,1
+12,esit,Tarih,Çağdaş Türk tarihi,40,45,0,1
+12,esit,Tarih,XX. yüzyıl,50,45,0,1
+12,esit,Coğrafya,Fiziki coğrafya,10,45,0,1
+12,esit,Coğrafya,Beşeri coğrafya,20,45,0,1
+12,esit,Coğrafya,Türkiye coğrafyası,30,45,0,1
+12,esit,Coğrafya,Ekonomik coğrafya,40,45,0,1
+12,esit,Coğrafya,Çevre,50,45,0,1
+12,esit,Türkçe,Paragraf ana düşünce,10,40,3,0
+12,esit,Türkçe,Paragraf yardımcı düşünce,20,40,3,0
+12,esit,Türkçe,Paragraf tamamlama,30,40,3,0
+12,esit,Türkçe,Cümle tamamlama,40,40,0,0
+12,esit,Türkçe,Anlatım bozuklukları,50,40,2,0
+12,esit,Türkçe,Sözcükte anlam,60,40,2,0
+12,esit,Türkçe,Cümlede anlam,70,40,2,0
+12,esit,Türkçe,Yazım kuralları,80,40,0,0

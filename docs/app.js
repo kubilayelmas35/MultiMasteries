@@ -38,6 +38,8 @@
   let STU_WEEK_ITEMS = [];
   let MODAL_ITEM = null;
   let STF_OVERVIEW = null;
+  /** Seçili öğrencinin sınıf/bölümü (yeni hücre varsayılanı) */
+  let STF_STUDENT_CTX = { grade: 11, track: 'sayisal' };
   /** Sunucudaki giriş kodu (üst üste güncelleme isteği göndermemek için) */
   let STF_PROFILE_SNAPSHOT = { loginCode: '' };
   let STU_PROFILE_SNAPSHOT = { loginCode: '' };
@@ -111,7 +113,30 @@
     showStudentToast._tm = setTimeout(() => { t.classList.remove('open'); }, 4200);
   }
 
+  function effectiveTrack(grade, track) {
+    const g = Number(grade) || 11;
+    if (g <= 10) return 'lgs';
+    const t = String(track || '').trim().toLowerCase();
+    return t || 'sayisal';
+  }
+  function subjectsCacheKey(grade, track) {
+    const g = Number(grade) || 11;
+    return g + '-' + effectiveTrack(g, track);
+  }
+  function topicDisplayLabel(t) {
+    if (!t) return '';
+    if (t.displayTitle) return t.displayTitle;
+    const title = t.title || '';
+    const et = Number(t.examTyt) || 0;
+    const ea = Number(t.examAyt) || 0;
+    const parts = [];
+    if (et > 0) parts.push('TYT: ' + et);
+    if (ea > 0) parts.push('AYT: ' + ea);
+    return parts.length ? title + ' (' + parts.join(' · ') + ')' : title;
+  }
   function emptyCell() {
+    const g = STF_STUDENT_CTX.grade || 11;
+    const tr = effectiveTrack(g, STF_STUDENT_CTX.track);
     return {
       subjectId: '',
       durationMinutes: 45,
@@ -120,8 +145,8 @@
       teacherNote: '',
       importance: 'normal',
       hasTest: false,
-      curriculumGrade: 11,
-      curriculumTrack: 'sayisal',
+      curriculumGrade: g,
+      curriculumTrack: tr,
     };
   }
   function getCell(dow, slot) {
@@ -447,6 +472,8 @@
           teacherNote: c.teacherNote || '',
           importance: c.importance || 'normal',
           hasTest: c.importance === 'test' || !!c.hasTest,
+          curriculumGrade: c.curriculumGrade,
+          curriculumTrack: c.curriculumTrack,
         });
       });
     }
@@ -468,6 +495,8 @@
       byDay[dow].forEach((it, idx) => {
         const slot = idx + 1;
         DAY_SLOTS[dow].push(slot);
+        const cg = it.curriculumGrade != null ? Number(it.curriculumGrade) : (STF_STUDENT_CTX.grade || 11);
+        const ct = it.curriculumTrack ? String(it.curriculumTrack) : effectiveTrack(cg, STF_STUDENT_CTX.track);
         STF_CELLS[cellKey(dow, slot)] = {
           subjectId: (it.subject && it.subject._id) || it.subjectId || '',
           durationMinutes: it.durationMinutes || 45,
@@ -476,45 +505,51 @@
           teacherNote: it.teacherNote || '',
           importance: it.importance || (it.hasTest ? 'test' : 'normal'),
           hasTest: !!it.hasTest,
-          curriculumGrade: 11,
-          curriculumTrack: 'sayisal',
+          curriculumGrade: cg,
+          curriculumTrack: effectiveTrack(cg, ct),
           studentLog: it.studentLog || null,
         };
       });
     }
   }
 
-  async function loadSubjectsForCell(grade, track) {
-    const key = grade + '-' + track;
-    if (SUBJECTS_CACHE[key]) return SUBJECTS_CACHE[key];
+  async function loadSubjectsForCell(grade, track, forceReload) {
+    const g = Number(grade) || 11;
+    const tr = effectiveTrack(g, track);
+    const key = subjectsCacheKey(g, tr);
+    if (!forceReload && SUBJECTS_CACHE[key] && SUBJECTS_CACHE[key].length) return SUBJECTS_CACHE[key];
     const list = await post('staffcurriculumsubjects', {
       staffToken: stfToken(),
-      grade,
-      track: grade <= 10 ? 'lgs' : track,
+      grade: g,
+      track: tr,
     });
-    SUBJECTS_CACHE[key] = list;
-    return list;
+    if (list && list.length) SUBJECTS_CACHE[key] = list;
+    else if (!SUBJECTS_CACHE[key]) SUBJECTS_CACHE[key] = list || [];
+    return list || [];
   }
 
-  async function loadTopics(grade, track, subjectId, studentId) {
-    const key = grade + '-' + track + '-' + subjectId;
-    if (TOPIC_CACHE[key]) return TOPIC_CACHE[key];
+  async function loadTopics(grade, track, subjectId, studentId, forceReload) {
+    const g = Number(grade) || 11;
+    const tr = effectiveTrack(g, track);
+    const key = g + '-' + tr + '-' + subjectId;
+    if (!forceReload && TOPIC_CACHE[key] && TOPIC_CACHE[key].length) return TOPIC_CACHE[key];
     const list = await post('stafftopics', {
       staffToken: stfToken(),
       studentId,
       subjectId,
-      grade,
-      track: grade <= 10 ? 'lgs' : track,
+      grade: g,
+      track: tr,
     });
-    TOPIC_CACHE[key] = list;
-    return list;
+    if (list && list.length) TOPIC_CACHE[key] = list;
+    else if (!TOPIC_CACHE[key]) TOPIC_CACHE[key] = list || [];
+    return list || [];
   }
 
   function renderCellEditor(dow, slot, cell) {
-    const g = cell.curriculumGrade || 11;
-    const tr = cell.curriculumTrack || (g <= 10 ? 'lgs' : 'sayisal');
+    const g = cell.curriculumGrade || STF_STUDENT_CTX.grade || 11;
+    const tr = effectiveTrack(g, cell.curriculumTrack || STF_STUDENT_CTX.track);
     const showTrack = g >= 11;
-    const subKey = g + '-' + (g <= 10 ? 'lgs' : tr);
+    const subKey = subjectsCacheKey(g, tr);
     const subs = SUBJECTS_CACHE[subKey] || [];
     let subOpts = '<option value="">— Ders —</option>';
     subs.forEach((s) => {
@@ -562,10 +597,11 @@
         const c = getCell(dow, slot);
         c.curriculumGrade = +root.querySelector('.wc-grade[data-dow="' + dow + '"][data-slot="' + slot + '"]').value;
         const trackEl = root.querySelector('.wc-track[data-dow="' + dow + '"][data-slot="' + slot + '"]');
-        c.curriculumTrack = trackEl ? trackEl.value : 'lgs';
+        c.curriculumTrack = effectiveTrack(c.curriculumGrade, trackEl ? trackEl.value : 'lgs');
         c.subjectId = '';
         c.topicIdsSnapshot = '';
-        await loadSubjectsForCell(c.curriculumGrade, c.curriculumTrack);
+        c.topicSnapshot = '';
+        await loadSubjectsForCell(c.curriculumGrade, c.curriculumTrack, true);
         stfRenderWeekGrid();
       };
     });
@@ -578,10 +614,10 @@
         const box = el.closest('.week-cell').querySelector('.topic-box');
         box.style.display = c.subjectId ? 'block' : 'none';
         if (c.subjectId) {
-          const topics = await loadTopics(c.curriculumGrade, c.curriculumTrack, c.subjectId, document.getElementById('stf-student').value);
+          const topics = await loadTopics(c.curriculumGrade, c.curriculumTrack, c.subjectId, document.getElementById('stf-student').value, true);
           const sel = el.closest('.week-cell').querySelector('.wc-topic-cur');
           let h = '<option value="">Konu seç…</option>';
-          topics.forEach((t) => { h += '<option value="' + t._id + '">' + escapeHtml(t.title) + '</option>'; });
+          topics.forEach((t) => { h += '<option value="' + t._id + '">' + escapeHtml(topicDisplayLabel(t)) + '</option>'; });
           sel.innerHTML = h;
         }
       };
@@ -608,7 +644,10 @@
         const opt = el.options[el.selectedIndex];
         if (!el.value) return;
         c.topicIdsSnapshot = el.value;
-        c.topicSnapshot = opt.textContent || '';
+        const topicKey = subjectsCacheKey(c.curriculumGrade, c.curriculumTrack) + '-' + c.subjectId;
+        const topics = TOPIC_CACHE[topicKey] || [];
+        const found = topics.find((x) => x._id === el.value);
+        c.topicSnapshot = (found && found.title) ? found.title : (opt.textContent || '');
         const man = el.closest('.week-cell').querySelector('.wc-topic-manual');
         if (man) man.value = c.topicSnapshot;
       };
@@ -634,9 +673,7 @@
       html += '<button type="button" class="ghost day-add" data-dow="' + dow + '" style="width:100%;margin-bottom:6px;font-size:0.75rem">+ Satır ekle</button>';
       for (const slot of slots) {
         const c = getCell(dow, slot);
-        if (c.subjectId || c.topicSnapshot) {
-          await loadSubjectsForCell(c.curriculumGrade, c.curriculumTrack);
-        }
+        await loadSubjectsForCell(c.curriculumGrade, c.curriculumTrack);
         const bg = c.subjectId ? subjectColor(c.subjectId, 0.35) : 'var(--cell-empty)';
         html += '<div class="day-cell-wrap" style="background:' + bg + ';margin-bottom:8px;padding:6px;border-radius:8px">';
         html += renderCellEditor(dow, slot, c);
@@ -666,7 +703,7 @@
         if (!sel) continue;
         let h = '<option value="">Konu seç…</option>';
         topics.forEach((t) => {
-          h += '<option value="' + t._id + '"' + (c.topicIdsSnapshot === t._id ? ' selected' : '') + '>' + escapeHtml(t.title) + '</option>';
+          h += '<option value="' + t._id + '"' + (c.topicIdsSnapshot === t._id ? ' selected' : '') + '>' + escapeHtml(topicDisplayLabel(t)) + '</option>';
         });
         sel.innerHTML = h;
       }
@@ -684,9 +721,23 @@
       const o = document.createElement('option');
       o.value = s.studentId;
       o.textContent = s.label || s.studentId;
+      const g = Number(s.grade) || 11;
+      o.dataset.grade = String(g);
+      o.dataset.track = effectiveTrack(g, s.track || 'sayisal');
       sel.appendChild(o);
     });
+    if (sel.options.length && sel.selectedIndex >= 0) {
+      const o = sel.options[sel.selectedIndex];
+      STF_STUDENT_CTX = {
+        grade: Number(o.dataset.grade) || 11,
+        track: o.dataset.track || 'sayisal',
+      };
+    }
     sel.onchange = () => {
+      const opt = sel.options[sel.selectedIndex];
+      const grade = opt && opt.dataset.grade ? Number(opt.dataset.grade) : 11;
+      const track = opt && opt.dataset.track ? opt.dataset.track : 'sayisal';
+      STF_STUDENT_CTX = { grade: grade || 11, track: effectiveTrack(grade, track) };
       SUBJECTS_CACHE = {};
       TOPIC_CACHE = {};
       STF_OVERVIEW = null;

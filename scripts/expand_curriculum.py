@@ -11,9 +11,9 @@ ROOT = Path(__file__).resolve().parent.parent / "data" / "curriculum"
 def write_csv(path: Path, grade: int, track: str, rows: list[tuple[str, str, int, int]]) -> None:
     with path.open("w", encoding="utf-8", newline="") as f:
         w = csv.writer(f)
-        w.writerow(["grade", "track", "Subject", "title", "sortOrder", "defaultMinutes"])
+        w.writerow(["grade", "track", "Subject", "title", "sortOrder", "defaultMinutes", "examTyt", "examAyt"])
         for subj, title, so, dm in rows:
-            w.writerow([grade, track, subj, title, so, dm])
+            w.writerow([grade, track, subj, title, so, dm, 0, 0])
 
 
 def topics(subject: str, titles: list[str], dm: int = 45) -> list[tuple[str, str, int, int]]:
@@ -33,10 +33,23 @@ T09_MAT = [
     "Özdeşlikler", "Denklem çözme", "Doğrusal denklemler", "Eşitsizlikler", "Üçgenler",
     "Eşlik ve benzerlik", "Çember ve daire", "Veri analizi", "Olasılık (temel)", "Koordinat sistemi",
 ]
-T09_FEN = [
-    "Mevsimler ve iklim", "DNA ve genetik", "Basit makineler", "Kuvvet ve hareket", "Newton yasaları",
-    "İş ve enerji", "Madde ve ısı", "Basınç", "Sıvı basıncı", "Elektrik yükleri", "Elektrik devreleri",
-    "Mıknatıs ve manyetizma", "Ses ve özellikleri", "Işık ve gölge", "Aynalar ve mercekler",
+T09_FIZ = [
+    "Fizik bilimine giriş", "Madde ve özellikleri", "Kuvvet ve hareket", "Newton yasaları",
+    "İş güç enerji", "Basınç", "Sıvı basıncı", "Kaldırma kuvveti", "Isı ve sıcaklık",
+    "Elektrik yükü ve elektriklenme", "Elektrik devreleri", "Mıknatıs ve manyetizma",
+    "Ses dalgaları", "Işık ve gölge", "Düzlem aynalar", "Küresel aynalar", "Işığın kırılması",
+]
+T09_KIM = [
+    "Kimya bilimi", "Atom ve periyodik sistem", "Kimyasal bağlar", "Mol kavramı",
+    "Kimyasal tepkimeler", "Asitler ve bazlar", "Karışımlar", "Maddenin halleri",
+]
+T09_BIO = [
+    "Canlıların ortak özellikleri", "Hücre ve organeller", "Hücre bölünmeleri", "Kalıtım",
+    "Ekosistem", "Madde döngüleri", "DNA ve genetik kod", "Biyoteknoloji (giriş)",
+]
+T09_COG = [
+    "Harita bilgisi", "Koordinat sistemi", "Yer şekilleri", "İklim tipleri", "Nüfus",
+    "Yerleşme", "Türkiye'nin konumu", "Ekonomik faaliyetler", "Doğal afetler",
 ]
 T09_INK = [
     "Tarih ve zaman", "İnsanlığın ilk dönemleri", "İlk Türk devletleri", "İslamiyet öncesi Türk",
@@ -61,9 +74,21 @@ T10_MAT = [
     "Dönüşüm geometrisi", "Çember", "Katı cisimler", "Olasılık", "İstatistik", "Veri yorumlama",
     "Kareköklü ifadeler", "Polinomlar (giriş)",
 ]
-T10_FEN = [
-    "Kimyasal tepkimeler", "Asit-baz", "Periyodik tablo", "Kuvvet ve enerji", "Elektrik",
-    "Manyetizma", "Optik", "Üreme ve embriyo", "Kalıtım", "Ekosistem", "Enerji dönüşümleri",
+T10_FIZ = [
+    "Elektrik ve manyetizma", "Basit harmonik hareket", "Dalgalar", "Optik (mercekler)",
+    "Kuvvet ve enerji tekrar", "İş güç enerji", "Basınç uygulamaları",
+]
+T10_KIM = [
+    "Kimyasal hesaplamalar", "Gazlar", "Çözeltiler", "Tepkime hızı", "Kimyasal denge",
+    "Asit-baz tekrar", "Organik bileşiklere giriş",
+]
+T10_BIO = [
+    "Sinir sistemi", "Endokrin sistem", "Duyu organları", "Destek ve hareket",
+    "Sindirim", "Dolaşım", "Solunum", "Boşaltım", "Üreme", "Komünite ve popülasyon ekolojisi",
+]
+T10_COG = [
+    "Türkiye fiziki coğrafya", "Türkiye beşeri coğrafya", "Bölgeler", "Çevre sorunları",
+    "Küresel iklim", "Ekonomik coğrafya",
 ]
 T10_INK = [
     "Osmanlı kültür", "Aydınlanma", "Osmanlı reformları", "I. Dünya Savaşı", "Mondros",
@@ -89,11 +114,15 @@ TYT_FEN = [
 ]
 
 def build_lgs(grade: int) -> list[tuple[str, str, int, int]]:
+    """9–10. sınıf lise ortak müfredat (TYT temeli; track=lgs)."""
     if grade == 9:
         return (
             topics("Türkçe", T09_TR)
             + topics("Matematik", T09_MAT)
-            + topics("Fen Bilimleri", T09_FEN)
+            + topics("Fizik", T09_FIZ)
+            + topics("Kimya", T09_KIM)
+            + topics("Biyoloji", T09_BIO)
+            + topics("Coğrafya", T09_COG, 40)
             + topics("T.C. İnkılap Tarihi ve Atatürkçülük", T09_INK)
             + topics("Din Kültürü ve Ahlak Bilgisi", T09_DIN, 40)
             + topics("İngilizce", T09_ING, 40)
@@ -101,7 +130,10 @@ def build_lgs(grade: int) -> list[tuple[str, str, int, int]]:
     return (
         topics("Türkçe", T10_TR)
         + topics("Matematik", T10_MAT)
-        + topics("Fen Bilimleri", T10_FEN)
+        + topics("Fizik", T10_FIZ)
+        + topics("Kimya", T10_KIM)
+        + topics("Biyoloji", T10_BIO)
+        + topics("Coğrafya", T10_COG, 40)
         + topics("T.C. İnkılap Tarihi ve Atatürkçülük", T10_INK)
         + topics("Din Kültürü ve Ahlak Bilgisi", T10_DIN, 40)
         + topics("İngilizce", T10_ING, 40)

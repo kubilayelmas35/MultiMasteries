@@ -1,78 +1,105 @@
-grade,track,Subject,title,sortOrder,defaultMinutes
-9,lgs,Türkçe,Sözcükte anlam,10,45
-9,lgs,Türkçe,Cümlede anlam,20,45
-9,lgs,Türkçe,Paragraf (ana düşünce),30,45
-9,lgs,Türkçe,Paragraf (yardımcı düşünce),40,45
-9,lgs,Türkçe,Paragraf (anlatım biçimleri),50,45
-9,lgs,Türkçe,Deyim ve atasözü,60,45
-9,lgs,Türkçe,Söz sanatları,70,45
-9,lgs,Türkçe,Yazım kuralları,80,45
-9,lgs,Türkçe,Noktalama işaretleri,90,45
-9,lgs,Türkçe,Fiilimsiler,100,45
-9,lgs,Türkçe,Cümlenin ögeleri,110,45
-9,lgs,Türkçe,Anlatım bozuklukları,120,45
-9,lgs,Türkçe,Sözel mantık / görsel okuma,130,45
-9,lgs,Matematik,Doğal sayılar,10,45
-9,lgs,Matematik,Tam sayılar,20,45
-9,lgs,Matematik,Rasyonel sayılar,30,45
-9,lgs,Matematik,Üslü ifadeler,40,45
-9,lgs,Matematik,Köklü ifadeler,50,45
-9,lgs,Matematik,Çarpanlar ve katlar,60,45
-9,lgs,Matematik,EBOB-EKOK,70,45
-9,lgs,Matematik,Oran orantı,80,45
-9,lgs,Matematik,Yüzde problemleri,90,45
-9,lgs,Matematik,Cebirsel ifadeler,100,45
-9,lgs,Matematik,Özdeşlikler,110,45
-9,lgs,Matematik,Denklem çözme,120,45
-9,lgs,Matematik,Doğrusal denklemler,130,45
-9,lgs,Matematik,Eşitsizlikler,140,45
-9,lgs,Matematik,Üçgenler,150,45
-9,lgs,Matematik,Eşlik ve benzerlik,160,45
-9,lgs,Matematik,Çember ve daire,170,45
-9,lgs,Matematik,Veri analizi,180,45
-9,lgs,Matematik,Olasılık (temel),190,45
-9,lgs,Matematik,Koordinat sistemi,200,45
-9,lgs,Fen Bilimleri,Mevsimler ve iklim,10,45
-9,lgs,Fen Bilimleri,DNA ve genetik,20,45
-9,lgs,Fen Bilimleri,Basit makineler,30,45
-9,lgs,Fen Bilimleri,Kuvvet ve hareket,40,45
-9,lgs,Fen Bilimleri,Newton yasaları,50,45
-9,lgs,Fen Bilimleri,İş ve enerji,60,45
-9,lgs,Fen Bilimleri,Madde ve ısı,70,45
-9,lgs,Fen Bilimleri,Basınç,80,45
-9,lgs,Fen Bilimleri,Sıvı basıncı,90,45
-9,lgs,Fen Bilimleri,Elektrik yükleri,100,45
-9,lgs,Fen Bilimleri,Elektrik devreleri,110,45
-9,lgs,Fen Bilimleri,Mıknatıs ve manyetizma,120,45
-9,lgs,Fen Bilimleri,Ses ve özellikleri,130,45
-9,lgs,Fen Bilimleri,Işık ve gölge,140,45
-9,lgs,Fen Bilimleri,Aynalar ve mercekler,150,45
-9,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Tarih ve zaman,10,45
-9,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,İnsanlığın ilk dönemleri,20,45
-9,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,İlk Türk devletleri,30,45
-9,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,İslamiyet öncesi Türk,40,45
-9,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,İlk Türk-İslam devletleri,50,45
-9,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Selçuklu Türkiyesi,60,45
-9,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Osmanlı kuruluş,70,45
-9,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Osmanlı yükselme,80,45
-9,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Kültür ve medeniyet,90,45
-9,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Atatürk ve çağdaşlaşma (giriş),100,45
-9,lgs,Din Kültürü ve Ahlak Bilgisi,İnanç,10,40
-9,lgs,Din Kültürü ve Ahlak Bilgisi,İbadet,20,40
-9,lgs,Din Kültürü ve Ahlak Bilgisi,Hz. Muhammed,30,40
-9,lgs,Din Kültürü ve Ahlak Bilgisi,Kur'an,40,40
-9,lgs,Din Kültürü ve Ahlak Bilgisi,Ahlak,50,40
-9,lgs,Din Kültürü ve Ahlak Bilgisi,Hz. örnekleri,60,40
-9,lgs,Din Kültürü ve Ahlak Bilgisi,Din ve hayat,70,40
-9,lgs,İngilizce,Greetings,10,40
-9,lgs,İngilizce,Personal information,20,40
-9,lgs,İngilizce,Daily routines,30,40
-9,lgs,İngilizce,Simple present,40,40
-9,lgs,İngilizce,Present continuous,50,40
-9,lgs,İngilizce,Past simple,60,40
-9,lgs,İngilizce,Future (going to),70,40
-9,lgs,İngilizce,Countable/uncountable,80,40
-9,lgs,İngilizce,Comparatives,90,40
-9,lgs,İngilizce,Directions,100,40
-9,lgs,İngilizce,Phone conversations,110,40
-9,lgs,İngilizce,Reading strategies,120,40
+grade,track,Subject,title,sortOrder,defaultMinutes,examTyt,examAyt
+9,lgs,Türkçe,Sözcükte anlam,10,45,2,0
+9,lgs,Türkçe,Cümlede anlam,20,45,2,0
+9,lgs,Türkçe,Paragraf (ana düşünce),30,45,3,0
+9,lgs,Türkçe,Paragraf (yardımcı düşünce),40,45,3,0
+9,lgs,Türkçe,Paragraf (anlatım biçimleri),50,45,3,0
+9,lgs,Türkçe,Deyim ve atasözü,60,45,0,0
+9,lgs,Türkçe,Söz sanatları,70,45,0,0
+9,lgs,Türkçe,Yazım kuralları,80,45,0,0
+9,lgs,Türkçe,Noktalama işaretleri,90,45,0,0
+9,lgs,Türkçe,Fiilimsiler,100,45,0,0
+9,lgs,Türkçe,Cümlenin ögeleri,110,45,0,0
+9,lgs,Türkçe,Anlatım bozuklukları,120,45,2,0
+9,lgs,Türkçe,Sözel mantık / görsel okuma,130,45,2,0
+9,lgs,Matematik,Doğal sayılar,10,45,0,0
+9,lgs,Matematik,Tam sayılar,20,45,0,0
+9,lgs,Matematik,Rasyonel sayılar,30,45,0,0
+9,lgs,Matematik,Üslü ifadeler,40,45,0,0
+9,lgs,Matematik,Köklü ifadeler,50,45,0,0
+9,lgs,Matematik,Çarpanlar ve katlar,60,45,0,0
+9,lgs,Matematik,EBOB-EKOK,70,45,0,0
+9,lgs,Matematik,Oran orantı,80,45,0,0
+9,lgs,Matematik,Yüzde problemleri,90,45,3,2
+9,lgs,Matematik,Cebirsel ifadeler,100,45,0,0
+9,lgs,Matematik,Özdeşlikler,110,45,0,0
+9,lgs,Matematik,Denklem çözme,120,45,0,0
+9,lgs,Matematik,Doğrusal denklemler,130,45,0,0
+9,lgs,Matematik,Eşitsizlikler,140,45,0,0
+9,lgs,Matematik,Üçgenler,150,45,0,0
+9,lgs,Matematik,Eşlik ve benzerlik,160,45,0,0
+9,lgs,Matematik,Çember ve daire,170,45,0,0
+9,lgs,Matematik,Veri analizi,180,45,0,0
+9,lgs,Matematik,Olasılık (temel),190,45,0,0
+9,lgs,Matematik,Koordinat sistemi,200,45,0,0
+9,lgs,Fizik,Fizik bilimine giriş,10,45,0,0
+9,lgs,Fizik,Madde ve özellikleri,20,45,0,0
+9,lgs,Fizik,Kuvvet ve hareket,30,45,0,0
+9,lgs,Fizik,Newton yasaları,40,45,0,0
+9,lgs,Fizik,İş güç enerji,50,45,0,0
+9,lgs,Fizik,Basınç,60,45,0,0
+9,lgs,Fizik,Sıvı basıncı,70,45,0,0
+9,lgs,Fizik,Kaldırma kuvveti,80,45,0,0
+9,lgs,Fizik,Isı ve sıcaklık,90,45,0,0
+9,lgs,Fizik,Elektrik yükü ve elektriklenme,100,45,0,0
+9,lgs,Fizik,Elektrik devreleri,110,45,0,0
+9,lgs,Fizik,Mıknatıs ve manyetizma,120,45,0,0
+9,lgs,Fizik,Ses dalgaları,130,45,0,0
+9,lgs,Fizik,Işık ve gölge,140,45,0,0
+9,lgs,Fizik,Düzlem aynalar,150,45,0,0
+9,lgs,Fizik,Küresel aynalar,160,45,0,0
+9,lgs,Fizik,Işığın kırılması,170,45,0,0
+9,lgs,Kimya,Kimya bilimi,10,45,0,0
+9,lgs,Kimya,Atom ve periyodik sistem,20,45,0,0
+9,lgs,Kimya,Kimyasal bağlar,30,45,0,0
+9,lgs,Kimya,Mol kavramı,40,45,0,0
+9,lgs,Kimya,Kimyasal tepkimeler,50,45,0,0
+9,lgs,Kimya,Asitler ve bazlar,60,45,0,0
+9,lgs,Kimya,Karışımlar,70,45,0,0
+9,lgs,Kimya,Maddenin halleri,80,45,0,0
+9,lgs,Biyoloji,Canlıların ortak özellikleri,10,45,0,0
+9,lgs,Biyoloji,Hücre ve organeller,20,45,0,0
+9,lgs,Biyoloji,Hücre bölünmeleri,30,45,0,0
+9,lgs,Biyoloji,Kalıtım,40,45,0,0
+9,lgs,Biyoloji,Ekosistem,50,45,0,0
+9,lgs,Biyoloji,Madde döngüleri,60,45,0,0
+9,lgs,Biyoloji,DNA ve genetik kod,70,45,0,0
+9,lgs,Biyoloji,Biyoteknoloji (giriş),80,45,0,0
+9,lgs,Coğrafya,Harita bilgisi,10,40,0,0
+9,lgs,Coğrafya,Koordinat sistemi,20,40,0,0
+9,lgs,Coğrafya,Yer şekilleri,30,40,0,0
+9,lgs,Coğrafya,İklim tipleri,40,40,0,0
+9,lgs,Coğrafya,Nüfus,50,40,0,0
+9,lgs,Coğrafya,Yerleşme,60,40,0,0
+9,lgs,Coğrafya,Türkiye'nin konumu,70,40,0,0
+9,lgs,Coğrafya,Ekonomik faaliyetler,80,40,0,0
+9,lgs,Coğrafya,Doğal afetler,90,40,0,0
+9,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Tarih ve zaman,10,45,0,0
+9,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,İnsanlığın ilk dönemleri,20,45,0,0
+9,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,İlk Türk devletleri,30,45,0,0
+9,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,İslamiyet öncesi Türk,40,45,0,0
+9,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,İlk Türk-İslam devletleri,50,45,0,0
+9,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Selçuklu Türkiyesi,60,45,0,0
+9,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Osmanlı kuruluş,70,45,0,0
+9,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Osmanlı yükselme,80,45,0,0
+9,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Kültür ve medeniyet,90,45,0,0
+9,lgs,T.C. İnkılap Tarihi ve Atatürkçülük,Atatürk ve çağdaşlaşma (giriş),100,45,0,0
+9,lgs,Din Kültürü ve Ahlak Bilgisi,İnanç,10,40,0,0
+9,lgs,Din Kültürü ve Ahlak Bilgisi,İbadet,20,40,0,0
+9,lgs,Din Kültürü ve Ahlak Bilgisi,Hz. Muhammed,30,40,0,0
+9,lgs,Din Kültürü ve Ahlak Bilgisi,Kur'an,40,40,0,0
+9,lgs,Din Kültürü ve Ahlak Bilgisi,Ahlak,50,40,0,0
+9,lgs,Din Kültürü ve Ahlak Bilgisi,Hz. örnekleri,60,40,0,0
+9,lgs,Din Kültürü ve Ahlak Bilgisi,Din ve hayat,70,40,0,0
+9,lgs,İngilizce,Greetings,10,40,0,0
+9,lgs,İngilizce,Personal information,20,40,0,0
+9,lgs,İngilizce,Daily routines,30,40,0,0
+9,lgs,İngilizce,Simple present,40,40,0,0
+9,lgs,İngilizce,Present continuous,50,40,0,0
+9,lgs,İngilizce,Past simple,60,40,0,0
+9,lgs,İngilizce,Future (going to),70,40,0,0
+9,lgs,İngilizce,Countable/uncountable,80,40,0,0
+9,lgs,İngilizce,Comparatives,90,40,0,0
+9,lgs,İngilizce,Directions,100,40,0,0
+9,lgs,İngilizce,Phone conversations,110,40,0,0
+9,lgs,İngilizce,Reading strategies,120,40,0,0

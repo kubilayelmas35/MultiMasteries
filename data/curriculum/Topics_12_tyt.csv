@@ -1,40 +1,40 @@
-grade,track,Subject,title,sortOrder,defaultMinutes
-12,tyt,Türkçe,Paragraf ana düşünce,10,40
-12,tyt,Türkçe,Paragraf yardımcı düşünce,20,40
-12,tyt,Türkçe,Paragraf tamamlama,30,40
-12,tyt,Türkçe,Cümle tamamlama,40,40
-12,tyt,Türkçe,Anlatım bozuklukları,50,40
-12,tyt,Türkçe,Sözcükte anlam,60,40
-12,tyt,Türkçe,Cümlede anlam,70,40
-12,tyt,Türkçe,Yazım kuralları,80,40
-12,tyt,Türkçe,Noktalama,90,40
-12,tyt,Türkçe,Sözel mantık,100,40
-12,tyt,Türkçe,Görsel okuma,110,40
-12,tyt,Türkçe,Anlatım teknikleri,120,40
-12,tyt,Matematik,Temel kavramlar,10,45
-12,tyt,Matematik,Sayılar,20,45
-12,tyt,Matematik,Bölünebilme,30,45
-12,tyt,Matematik,Rasyonel sayılar,40,45
-12,tyt,Matematik,Üslü,50,45
-12,tyt,Matematik,Köklü,60,45
-12,tyt,Matematik,Çarpanlara ayırma,70,45
-12,tyt,Matematik,Oran orantı,80,45
-12,tyt,Matematik,Problemler,90,45
-12,tyt,Matematik,Kümeler,100,45
-12,tyt,Matematik,Fonksiyonlar,110,45
-12,tyt,Matematik,Polinomlar,120,45
-12,tyt,Matematik,İkinci derece denklemler,130,45
-12,tyt,Matematik,Permütasyon,140,45
-12,tyt,Matematik,Kombinasyon,150,45
-12,tyt,Matematik,Olasılık,160,45
-12,tyt,Matematik,Veri,170,45
-12,tyt,Fen Bilimleri,Fizik hareket,10,45
-12,tyt,Fen Bilimleri,Fizik kuvvet,20,45
-12,tyt,Fen Bilimleri,Fizik enerji,30,45
-12,tyt,Fen Bilimleri,Kimya madde,40,45
-12,tyt,Fen Bilimleri,Kimya atom,50,45
-12,tyt,Fen Bilimleri,Kimya periyodik,60,45
-12,tyt,Fen Bilimleri,Kimya bağlar,70,45
-12,tyt,Fen Bilimleri,Biyoloji hücre,80,45
-12,tyt,Fen Bilimleri,Biyoloji sistemler,90,45
-12,tyt,Fen Bilimleri,Biyoloji ekoloji,100,45
+grade,track,Subject,title,sortOrder,defaultMinutes,examTyt,examAyt
+12,tyt,Türkçe,Paragraf ana düşünce,10,40,3,0
+12,tyt,Türkçe,Paragraf yardımcı düşünce,20,40,3,0
+12,tyt,Türkçe,Paragraf tamamlama,30,40,3,0
+12,tyt,Türkçe,Cümle tamamlama,40,40,1,0
+12,tyt,Türkçe,Anlatım bozuklukları,50,40,2,0
+12,tyt,Türkçe,Sözcükte anlam,60,40,2,0
+12,tyt,Türkçe,Cümlede anlam,70,40,2,0
+12,tyt,Türkçe,Yazım kuralları,80,40,1,0
+12,tyt,Türkçe,Noktalama,90,40,1,0
+12,tyt,Türkçe,Sözel mantık,100,40,1,0
+12,tyt,Türkçe,Görsel okuma,110,40,1,0
+12,tyt,Türkçe,Anlatım teknikleri,120,40,1,0
+12,tyt,Matematik,Temel kavramlar,10,45,1,0
+12,tyt,Matematik,Sayılar,20,45,1,0
+12,tyt,Matematik,Bölünebilme,30,45,1,0
+12,tyt,Matematik,Rasyonel sayılar,40,45,1,0
+12,tyt,Matematik,Üslü,50,45,1,0
+12,tyt,Matematik,Köklü,60,45,1,0
+12,tyt,Matematik,Çarpanlara ayırma,70,45,1,0
+12,tyt,Matematik,Oran orantı,80,45,1,0
+12,tyt,Matematik,Problemler,90,45,3,2
+12,tyt,Matematik,Kümeler,100,45,1,0
+12,tyt,Matematik,Fonksiyonlar,110,45,2,3
+12,tyt,Matematik,Polinomlar,120,45,1,0
+12,tyt,Matematik,İkinci derece denklemler,130,45,1,0
+12,tyt,Matematik,Permütasyon,140,45,1,0
+12,tyt,Matematik,Kombinasyon,150,45,1,0
+12,tyt,Matematik,Olasılık,160,45,1,0
+12,tyt,Matematik,Veri,170,45,1,0
+12,tyt,Fen Bilimleri,Fizik hareket,10,45,1,0
+12,tyt,Fen Bilimleri,Fizik kuvvet,20,45,1,0
+12,tyt,Fen Bilimleri,Fizik enerji,30,45,1,0
+12,tyt,Fen Bilimleri,Kimya madde,40,45,1,0
+12,tyt,Fen Bilimleri,Kimya atom,50,45,1,0
+12,tyt,Fen Bilimleri,Kimya periyodik,60,45,1,0
+12,tyt,Fen Bilimleri,Kimya bağlar,70,45,1,0
+12,tyt,Fen Bilimleri,Biyoloji hücre,80,45,1,0
+12,tyt,Fen Bilimleri,Biyoloji sistemler,90,45,1,0
+12,tyt,Fen Bilimleri,Biyoloji ekoloji,100,45,1,0

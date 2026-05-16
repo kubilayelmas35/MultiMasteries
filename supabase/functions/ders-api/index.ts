@@ -62,6 +62,13 @@ function characterMeta(stage: number) {
   return { stage: s, name: names[s], emoji: emojis[s] };
 }
 
+function topicDisplayTitle(title: string, examTyt: number, examAyt: number) {
+  const parts: string[] = [];
+  if (examTyt > 0) parts.push(`TYT: ${examTyt}`);
+  if (examAyt > 0) parts.push(`AYT: ${examAyt}`);
+  return parts.length ? `${title} (${parts.join(" · ")})` : title;
+}
+
 function trackLabel(track: string, grade: number) {
   if (grade <= 10) return "Lise 9–10";
   const m: Record<string, string> = {
@@ -617,16 +624,19 @@ Deno.serve(async (req) => {
         const staffId = await resolveStaffSession(supabase, String(body.staffToken || ""));
         const { data: rows, error } = await supabase
           .from("teacher_students")
-          .select("id, student_id, students ( id, title )")
+          .select("id, student_id, students ( id, title, grade, track )")
           .eq("staff_id", staffId)
           .eq("status", "active");
         if (error) throw error;
         const out = (rows || []).map((r: Record<string, unknown>) => {
-          const stu = r.students as { id: string; title: string } | null;
+          const stu = r.students as { id: string; title: string; grade: number; track: string } | null;
+          const grade = Number(stu?.grade) || 11;
           return {
             linkId: r.id,
             studentId: r.student_id,
             label: stu?.title || String(r.student_id),
+            grade,
+            track: grade <= 10 ? "lgs" : String(stu?.track || "sayisal"),
           };
         });
         return json(out);
@@ -722,15 +732,23 @@ Deno.serve(async (req) => {
         const merged = [...(a || []), ...(b || [])].sort(
           (x, y) => Number(x.sort_order || 0) - Number(y.sort_order || 0),
         );
-        const mapped = merged.map((t: Record<string, unknown>) => ({
-          _id: t.id,
-          title: t.title,
-          grade: t.grade,
-          track: t.track,
-          sortOrder: t.sort_order,
-          defaultMinutes: t.default_minutes,
-          subject: subjectId,
-        }));
+        const mapped = merged.map((t: Record<string, unknown>) => {
+          const rawTitle = String(t.title || "");
+          const examTyt = Number(t.exam_tyt) || 0;
+          const examAyt = Number(t.exam_ayt) || 0;
+          return {
+            _id: t.id,
+            title: rawTitle,
+            displayTitle: topicDisplayTitle(rawTitle, examTyt, examAyt),
+            examTyt,
+            examAyt,
+            grade: t.grade,
+            track: t.track,
+            sortOrder: t.sort_order,
+            defaultMinutes: t.default_minutes,
+            subject: subjectId,
+          };
+        });
         return json(mapped);
       }
       case "staffweeklyget": {
@@ -756,7 +774,7 @@ Deno.serve(async (req) => {
         const { data: items, error: e2 } = await supabase
           .from("plan_items")
           .select(
-            "id, day_of_week, slot_order, start_time, duration_minutes, topic_snapshot, topic_ids_snapshot, teacher_note, importance, has_test, subject_id, subjects ( id, title, color )",
+            "id, day_of_week, slot_order, start_time, duration_minutes, topic_snapshot, topic_ids_snapshot, teacher_note, importance, has_test, subject_id, curriculum_grade, curriculum_track, subjects ( id, title, color )",
           )
           .eq("weekly_plan_id", plan.id)
           .order("day_of_week", { ascending: true })
@@ -777,6 +795,8 @@ Deno.serve(async (req) => {
             teacherNote: it.teacher_note,
             importance: it.importance,
             hasTest: it.has_test,
+            curriculumGrade: it.curriculum_grade != null ? Number(it.curriculum_grade) : null,
+            curriculumTrack: it.curriculum_track != null ? String(it.curriculum_track) : "",
             subject: sub ? { _id: sub.id, title: sub.title, color: sub.color } : null,
             studentLog: lg
               ? {
@@ -863,6 +883,10 @@ Deno.serve(async (req) => {
               teacher_note: String(row.teacherNote || ""),
               importance: String(row.importance || "normal"),
               has_test: !!row.hasTest,
+              curriculum_grade: row.curriculumGrade != null && row.curriculumGrade !== ""
+                ? Number(row.curriculumGrade)
+                : null,
+              curriculum_track: row.curriculumTrack != null ? String(row.curriculumTrack) : "",
             })
             .select("*")
             .single();

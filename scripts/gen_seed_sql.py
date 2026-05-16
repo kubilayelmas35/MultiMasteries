@@ -47,9 +47,11 @@ def main() -> None:
                 title = esc(row["title"].strip())
                 so = int(row["sortOrder"])
                 dm = int(row["defaultMinutes"])
+                et = int(row.get("examTyt") or 0)
+                ea = int(row.get("examAyt") or 0)
                 lines.append(
-                    "insert into public.topics (grade, track, subject_id, title, sort_order, default_minutes) "
-                    f"select {grade}, '{track}', s.id, '{title}', {so}, {dm} "
+                    "insert into public.topics (grade, track, subject_id, title, sort_order, default_minutes, exam_tyt, exam_ayt) "
+                    f"select {grade}, '{track}', s.id, '{title}', {so}, {dm}, {et}, {ea} "
                     f"from public.subjects s where s.title = '{subj}';"
                 )
 

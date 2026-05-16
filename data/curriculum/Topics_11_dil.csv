@@ -1,22 +1,22 @@
-grade,track,Subject,title,sortOrder,defaultMinutes
-11,dil,Türkçe ve Edebiyat,Paragraf,10,45
-11,dil,Türkçe ve Edebiyat,Dil bilgisi,20,45
-11,dil,Türkçe ve Edebiyat,Anlatım,30,45
-11,dil,Türkçe ve Edebiyat,Sözcük türleri,40,45
-11,dil,Türkçe ve Edebiyat,Yazım,50,45
-11,dil,Türkçe ve Edebiyat,Metin türleri,60,45
-11,dil,İngilizce,Grammar review,10,45
-11,dil,İngilizce,Reading,20,45
-11,dil,İngilizce,Writing,30,45
-11,dil,İngilizce,Listening,40,45
-11,dil,İngilizce,Speaking,50,45
-11,dil,İngilizce,Use of English,60,45
-11,dil,İngilizce,Translation,70,45
-11,dil,İngilizce,Essay,80,45
-11,dil,İngilizce,Vocabulary,90,45
-11,dil,İngilizce,Exam strategies,100,45
-11,dil,Dil ve Anlatım,Söz varlığı,10,45
-11,dil,Dil ve Anlatım,Söz türleri,20,45
-11,dil,Dil ve Anlatım,Anlatım biçimleri,30,45
-11,dil,Dil ve Anlatım,Yazılı anlatım,40,45
-11,dil,Dil ve Anlatım,Sözlü anlatım,50,45
+grade,track,Subject,title,sortOrder,defaultMinutes,examTyt,examAyt
+11,dil,Türkçe ve Edebiyat,Paragraf,10,45,3,0
+11,dil,Türkçe ve Edebiyat,Dil bilgisi,20,45,0,0
+11,dil,Türkçe ve Edebiyat,Anlatım,30,45,0,0
+11,dil,Türkçe ve Edebiyat,Sözcük türleri,40,45,0,0
+11,dil,Türkçe ve Edebiyat,Yazım,50,45,0,0
+11,dil,Türkçe ve Edebiyat,Metin türleri,60,45,0,0
+11,dil,İngilizce,Grammar review,10,45,0,0
+11,dil,İngilizce,Reading,20,45,0,0
+11,dil,İngilizce,Writing,30,45,0,0
+11,dil,İngilizce,Listening,40,45,0,0
+11,dil,İngilizce,Speaking,50,45,0,0
+11,dil,İngilizce,Use of English,60,45,0,0
+11,dil,İngilizce,Translation,70,45,0,0
+11,dil,İngilizce,Essay,80,45,0,0
+11,dil,İngilizce,Vocabulary,90,45,0,0
+11,dil,İngilizce,Exam strategies,100,45,0,0
+11,dil,Dil ve Anlatım,Söz varlığı,10,45,0,0
+11,dil,Dil ve Anlatım,Söz türleri,20,45,0,0
+11,dil,Dil ve Anlatım,Anlatım biçimleri,30,45,0,0
+11,dil,Dil ve Anlatım,Yazılı anlatım,40,45,0,0
+11,dil,Dil ve Anlatım,Sözlü anlatım,50,45,0,0
